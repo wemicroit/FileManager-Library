@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <AssemblyName>WeMicroIt.Utils.FileConverter</AssemblyName>
+    <RootNamespace>WeMicroIt.Utils.FileConverter</RootNamespace>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.5.0-Alpha1</Version>
+    <Authors>James Thompson</Authors>
+    <Company>WeMicroIt</Company>
+    <Product>FileConverter</Product>
+    <Description>A simple library which is designed to make working with files more efficent and reliable.</Description>
+    <ApplicationIcon />
+    <StartupObject />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WeMicroIt.Utils.CSVConverter" Version="0.5.0-Beta5" />
+  </ItemGroup>
+
+</Project>

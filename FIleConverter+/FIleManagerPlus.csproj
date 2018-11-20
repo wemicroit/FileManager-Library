@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <RootNamespace>WeMicroIt.Utils.FileConverterPlus</RootNamespace>
+    <AssemblyName>WeMicroIt.Utils.FileConverterPlus</AssemblyName>
+    <PackageId>WeMicroIt.Utils.FileConverterPlus</PackageId>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>0.5.0</Version>
+    <Authors>James Thompson</Authors>
+    <Company>WeMicroIt</Company>
+    <Product>File Converter +</Product>
+    <Description>All the features of the base File Converter library with the added ability to filter the data set being returned using dynamic linq.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FIleConverter\FileManager.csproj" />
+  </ItemGroup>
+
+</Project>
