@@ -12,6 +12,11 @@ namespace WeMicroIt.Utils.FileConverter
     {
         private static string DirectoryPath { get; set; }
         private static string FilePath { get; set; }
+        private static bool MultiAction { get; set; }
+
+        private static StreamReader Reader { get; set; }
+        private static StreamWriter Writer { get; set; }
+
 
         public static CSVConverter.CSVConverter CSVConverter { get; set; } = new CSVConverter.CSVConverter();
 
@@ -148,6 +153,41 @@ namespace WeMicroIt.Utils.FileConverter
             }
         }
 
+        private bool StartRead()
+        {
+            try
+            {
+                FinishWrite();
+                if (Reader == null)
+                {
+                    Reader = new StreamReader(GetFullPath());
+                }
+                return Reader != null;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private bool FinishRead()
+        {
+            try
+            {
+                if (!MultiAction && Reader != null)
+                {
+                    Reader.Close();
+                    Reader.Dispose();
+                    Reader = null;
+                }
+                return Reader == null;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         public string ReadFile()
         {
             try
@@ -156,16 +196,16 @@ namespace WeMicroIt.Utils.FileConverter
                 {
                     throw new FileNotFoundException();
                 }
-                string contents = "";
-                using (StreamReader file = new StreamReader(GetFullPath()))
-                {
-                    contents = file.ReadToEnd();
-                }
-                return contents;
+                StartRead();
+                return Reader.ReadToEnd();
             }
             catch (Exception)
             {
                 return null;
+            }
+            finally
+            {
+                FinishRead();
             }
         }
 
@@ -177,16 +217,16 @@ namespace WeMicroIt.Utils.FileConverter
                 {
                     throw new FileNotFoundException();
                 }
-                string contents = "";
-                using (StreamReader file = new StreamReader(GetFullPath()))
-                {
-                    contents = file.ReadLine();
-                }
-                return contents;
+                StartRead();
+                return Reader.ReadLine();
             }
             catch (Exception)
             {
                 return null;
+            }
+            finally
+            {
+                FinishRead();
             }
         }
 
@@ -199,18 +239,19 @@ namespace WeMicroIt.Utils.FileConverter
                     throw new FileNotFoundException();
                 }
                 List<string> contents = new List<string>();
-                using (StreamReader file = new StreamReader(GetFullPath()))
+                while (!Reader.EndOfStream)
                 {
-                    while (!file.EndOfStream)
-                    {
-                        contents.Add(file.ReadLine());
-                    }
+                    contents.Add(ReadLine());
                 }
                 return contents;
             }
             catch (Exception)
             {
                 return null;
+            }
+            finally
+            {
+                FinishRead();
             }
         }
 
@@ -235,20 +276,87 @@ namespace WeMicroIt.Utils.FileConverter
             }
         }
 
-        private bool Write(string contents, bool append)
+        public List<T> ReadJSON<T>()
         {
             try
             {
-                using (StreamWriter file = new StreamWriter(GetFullPath(), append))
-                {
-                    file.Write(contents);
-                }
-                return true;
+                throw new NotImplementedException();
+            }
+            catch (Exception)
+            {
 
+                throw new NotImplementedException();
+            }
+        }
+
+        public List<T> ReadXML<T>()
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception)
+            {
+
+                throw new NotImplementedException();
+            }
+        }
+
+        private bool StartWrite()
+        {
+            return StartWrite(false);
+        }
+
+        private bool StartWrite(bool append)
+        {
+            try
+            {
+                FinishRead();
+                if (Writer == null)
+                {
+                    Writer = new StreamWriter(GetFullPath(), append);
+                }
+                return Writer != null;
             }
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        private bool FinishWrite()
+        {
+            try
+            {
+                if (!MultiAction && Writer != null)
+                {
+                    Writer.Close();
+                    Writer.Dispose();
+                    Writer = null;
+                }
+                return Writer == null;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private bool Write(string contents, bool append)
+        {
+            try
+            {
+                StartWrite(append);
+                Writer.Write(contents);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                FinishWrite();
             }
         }
 
@@ -266,16 +374,18 @@ namespace WeMicroIt.Utils.FileConverter
         {
             try
             {
-                using (StreamWriter file = new StreamWriter(GetFullPath(), append))
-                {
-                    file.WriteLine(contents);
-                }
+                StartWrite(append);
+                Writer.WriteLine(contents);
                 return true;
 
             }
             catch (Exception)
             {
                 return false;
+            }
+            finally
+            {
+                FinishWrite();
             }
         }
 
@@ -286,15 +396,28 @@ namespace WeMicroIt.Utils.FileConverter
 
         public bool WriteLines(List<string> contents, bool append)
         {
-            int written = 0;
-            foreach (var item in contents)
+            try
             {
-                if (WriteLine(item, append))
+                int written = 0;
+                MultiAction = true;
+                foreach (var item in contents)
                 {
-                    written++;
+                    if (WriteLine(item, append))
+                    {
+                        written++;
+                    }
                 }
+                return written == contents.Count;
             }
-            return written == contents.Count;
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                MultiAction = false;
+                FinishWrite();
+            }
         }
 
         public bool WriteCSV<T>(List<T> data)
@@ -314,6 +437,32 @@ namespace WeMicroIt.Utils.FileConverter
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        public bool WriteJSON<T>(List<T> data)
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception)
+            {
+
+                throw new NotImplementedException();
+            }
+        }
+
+        public bool WriteXML<T>(List<T> data)
+        {
+            try
+            {
+                throw new NotImplementedException();
+            }
+            catch (Exception)
+            {
+
+                throw new NotImplementedException();
             }
         }
     }
