@@ -52,7 +52,10 @@ namespace WeMicroIt.Utils.FileConverter
         {
             try
             {
-                StartWrite(append);
+                if (!StartWrite(append))
+                {
+                    throw new InvalidOperationException();
+                }
                 Writer.Write(contents);
                 return true;
             }
@@ -80,7 +83,10 @@ namespace WeMicroIt.Utils.FileConverter
         {
             try
             {
-                StartWrite(append);
+                if (!StartWrite(append))
+                {
+                    throw new InvalidOperationException();
+                }
                 Writer.WriteLine(contents);
                 return true;
 
@@ -126,7 +132,17 @@ namespace WeMicroIt.Utils.FileConverter
             }
         }
 
+        public bool AppendCSV<T>(List<T> data)
+        {
+            return WriteCSV<T>(data, true);
+        }
+
         public bool WriteCSV<T>(List<T> data)
+        {
+            return WriteCSV<T>(data, false);
+        }
+
+        public bool WriteCSV<T>(List<T> data, bool Append)
         {
             try
             {
@@ -138,7 +154,25 @@ namespace WeMicroIt.Utils.FileConverter
                 {
                     throw new ArgumentNullException();
                 }
-                return WriteLines(CSVConverter.SerializeBlock<T>(data));
+                return WriteLines(CSVConverter.SerializeBlock<T>(data), Append);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public bool AppendJSON<T>(List<T> data)
+        {
+            try
+            {
+                var fullData = ReadJSON<T>();
+                if (fullData == null)
+                {
+                    fullData = new List<T>();
+                }
+                fullData.AddRange(data);
+                return WriteJSON<T>(fullData);
             }
             catch (Exception)
             {
@@ -150,12 +184,33 @@ namespace WeMicroIt.Utils.FileConverter
         {
             try
             {
+                if (!FilePath.EndsWith(".json"))
+                {
+                    throw new FileNotFoundException();
+                }
                 throw new NotImplementedException();
             }
             catch (Exception)
             {
+                return false;
+            }
+        }
 
-                throw new NotImplementedException();
+        public bool AppendXML<T>(List<T> data)
+        {
+            try
+            {
+                var fullData = ReadXML<T>();
+                if (fullData == null)
+                {
+                    fullData = new List<T>();
+                }
+                fullData.AddRange(data);
+                return WriteXML<T>(fullData);
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
 
@@ -163,12 +218,15 @@ namespace WeMicroIt.Utils.FileConverter
         {
             try
             {
+                if (!FilePath.EndsWith(".xml"))
+                {
+                    throw new FileNotFoundException();
+                }
                 throw new NotImplementedException();
             }
             catch (Exception)
             {
-
-                throw new NotImplementedException();
+                return false;
             }
         }
     }
