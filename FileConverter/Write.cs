@@ -188,7 +188,7 @@ namespace WeMicroIt.Utils.FileConverter
                 {
                     throw new FileNotFoundException();
                 }
-                throw new NotImplementedException();
+                return WriteBlock(JSONConverter.SerializeObjects(data));
             }
             catch (Exception)
             {
@@ -222,7 +222,7 @@ namespace WeMicroIt.Utils.FileConverter
                 {
                     throw new FileNotFoundException();
                 }
-                throw new NotImplementedException();
+                return WriteBlock(XMLConverter.SerializeObjects(data));
             }
             catch (Exception)
             {

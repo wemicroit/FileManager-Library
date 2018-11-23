@@ -19,11 +19,15 @@ namespace WeMicroIt.Utils.FileConverter
 
 
         public static CSVConverter.CSVConverter CSVConverter { get; set; }
+        public static JSONConverter.JSONConverter JSONConverter { get; set; }
+        public static XMLConverter.XMLConverter XMLConverter { get; set; }
 
         public FileManager()
         {
             DirectoryPath = Directory.GetCurrentDirectory();
             CSVConverter = new CSVConverter.CSVConverter();
+            JSONConverter = new JSONConverter.JSONConverter();
+            XMLConverter = new XMLConverter.XMLConverter();
         }
 
         public string SetDirectoryPath(string path)

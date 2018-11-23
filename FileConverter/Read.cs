@@ -123,7 +123,7 @@ namespace WeMicroIt.Utils.FileConverter
                 {
                     throw new FileNotFoundException();
                 }
-                return CSVConverter.DeserialiseBlock<T>(ReadFile(), headers);
+                return CSVConverter.DeSerializeBlock<T>(ReadFile(), headers);
             }
             catch (Exception)
             {
@@ -139,7 +139,7 @@ namespace WeMicroIt.Utils.FileConverter
                 {
                     throw new FileNotFoundException();
                 };
-                throw new NotImplementedException();
+                return JSONConverter.DeSerializeObjects<T>(ReadFile());
             }
             catch (Exception)
             {
@@ -155,7 +155,7 @@ namespace WeMicroIt.Utils.FileConverter
                 {
                     throw new FileNotFoundException();
                 }
-                throw new NotImplementedException();
+                return XMLConverter.DeSerializeObjects<T>(ReadFile());
             }
             catch (Exception)
             {
