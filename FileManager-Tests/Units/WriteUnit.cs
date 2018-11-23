@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FileManager_Tests.Units
+namespace WeMicroIt.Utils.FileConverter.Tests.Units
 {
-    class WriteUnit
+    public class WriteUnit
     {
     }
 }

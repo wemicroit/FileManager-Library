@@ -4,7 +4,7 @@ using System.Text;
 using WeMicroIt.Utils.FileConverter;
 using Xunit;
 
-namespace FileManager_Tests.Units
+namespace WeMicroIt.Utils.FileConverter.Tests.Units
 {
     public class ReadUnit
     {
