@@ -135,12 +135,15 @@ namespace WeMicroIt.Utils.FileConverter
         {
             try
             {
+                if (!FilePath.EndsWith(".json"))
+                {
+                    throw new FileNotFoundException();
+                };
                 throw new NotImplementedException();
             }
             catch (Exception)
             {
-
-                throw new NotImplementedException();
+                return null;
             }
         }
 
@@ -148,6 +151,10 @@ namespace WeMicroIt.Utils.FileConverter
         {
             try
             {
+                if (!FilePath.EndsWith(".xml"))
+                {
+                    throw new FileNotFoundException();
+                }
                 throw new NotImplementedException();
             }
             catch (Exception)
