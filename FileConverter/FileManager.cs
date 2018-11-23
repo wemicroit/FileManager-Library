@@ -8,7 +8,7 @@ using WeMicroIt.Utils.FileConverter.Interfaces;
 
 namespace WeMicroIt.Utils.FileConverter
 {
-    public class FileManager : IFileManager
+    public partial class FileManager : IFileManager
     {
         private static string DirectoryPath { get; set; }
         private static string FilePath { get; set; }
@@ -18,14 +18,15 @@ namespace WeMicroIt.Utils.FileConverter
         private static StreamWriter Writer { get; set; }
 
 
-        public static CSVConverter.CSVConverter CSVConverter { get; set; } = new CSVConverter.CSVConverter();
+        public static CSVConverter.CSVConverter CSVConverter { get; set; }
 
         public FileManager()
         {
             DirectoryPath = Directory.GetCurrentDirectory();
+            CSVConverter = new CSVConverter.CSVConverter();
         }
 
-        public bool SetDirectoryPath(string path)
+        public string SetDirectoryPath(string path)
         {
             try
             {
@@ -37,24 +38,31 @@ namespace WeMicroIt.Utils.FileConverter
                 {
                     DirectoryPath = path;
                 }
-                return true;
+                return DirectoryPath;
             }
             catch (Exception)
             {
-                return false;
+                return null;
             }
         }
 
-        public bool SetFilePath(string path)
+        public string SetFilePath(string path)
         {
             try
             {
-                FilePath = path;
-                return true;
+                if (string.IsNullOrEmpty(path))
+                {
+                    FilePath = DateTimeOffset.Now.Date.ToShortDateString();
+                }
+                else
+                {
+                    FilePath = path;
+                }
+                return FilePath;
             }
             catch (Exception)
             {
-                return false;
+                return null;
             }
         }
 
@@ -87,7 +95,7 @@ namespace WeMicroIt.Utils.FileConverter
                 {
                     throw new DirectoryNotFoundException();
                 }
-                return Directory.GetFiles(GetFullPath(),"").Select(x => x.Replace(DirectoryPath, "")).ToList();
+                return Directory.GetFiles(DirectoryPath,"").Select(x => x.Replace(DirectoryPath, "")).ToList();
             }
             catch (Exception)
             {
@@ -150,319 +158,6 @@ namespace WeMicroIt.Utils.FileConverter
             catch (Exception)
             {
                 return false;
-            }
-        }
-
-        private bool StartRead()
-        {
-            try
-            {
-                FinishWrite();
-                if (Reader == null)
-                {
-                    Reader = new StreamReader(GetFullPath());
-                }
-                return Reader != null;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        private bool FinishRead()
-        {
-            try
-            {
-                if (!MultiAction && Reader != null)
-                {
-                    Reader.Close();
-                    Reader.Dispose();
-                    Reader = null;
-                }
-                return Reader == null;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        public string ReadFile()
-        {
-            try
-            {
-                if (!CheckFile())
-                {
-                    throw new FileNotFoundException();
-                }
-                StartRead();
-                return Reader.ReadToEnd();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-            finally
-            {
-                FinishRead();
-            }
-        }
-
-        public string ReadLine()
-        {
-            try
-            {
-                if (!CheckFile())
-                {
-                    throw new FileNotFoundException();
-                }
-                StartRead();
-                return Reader.ReadLine();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-            finally
-            {
-                FinishRead();
-            }
-        }
-
-        public List<string> ReadLines()
-        {
-            try
-            {
-                if (!CheckFile())
-                {
-                    throw new FileNotFoundException();
-                }
-                List<string> contents = new List<string>();
-                while (!Reader.EndOfStream)
-                {
-                    contents.Add(ReadLine());
-                }
-                return contents;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-            finally
-            {
-                FinishRead();
-            }
-        }
-
-        public List<T> ReadCSV<T>()
-        {
-            return ReadCSV<T>(true);
-        }
-
-        public List<T> ReadCSV<T>(bool headers)
-        {
-            try
-            {
-                if (!FilePath.EndsWith(".csv"))
-                {
-                    throw new FileNotFoundException();
-                }
-                return CSVConverter.DeserialiseBlock<T>(ReadFile(), headers);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        public List<T> ReadJSON<T>()
-        {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch (Exception)
-            {
-
-                throw new NotImplementedException();
-            }
-        }
-
-        public List<T> ReadXML<T>()
-        {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch (Exception)
-            {
-
-                throw new NotImplementedException();
-            }
-        }
-
-        private bool StartWrite()
-        {
-            return StartWrite(false);
-        }
-
-        private bool StartWrite(bool append)
-        {
-            try
-            {
-                FinishRead();
-                if (Writer == null)
-                {
-                    Writer = new StreamWriter(GetFullPath(), append);
-                }
-                return Writer != null;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        private bool FinishWrite()
-        {
-            try
-            {
-                if (!MultiAction && Writer != null)
-                {
-                    Writer.Close();
-                    Writer.Dispose();
-                    Writer = null;
-                }
-                return Writer == null;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        private bool Write(string contents, bool append)
-        {
-            try
-            {
-                StartWrite(append);
-                Writer.Write(contents);
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            finally
-            {
-                FinishWrite();
-            }
-        }
-
-        public bool WriteBlock(string contents)
-        {
-            return Write(contents, false);
-        }
-
-        public bool WriteLine(string contents)
-        {
-            return Write(contents, true);
-        }
-
-        public bool WriteLine(string contents, bool append)
-        {
-            try
-            {
-                StartWrite(append);
-                Writer.WriteLine(contents);
-                return true;
-
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            finally
-            {
-                FinishWrite();
-            }
-        }
-
-        public bool WriteLines(List<string> contents)
-        {
-            return WriteLines(contents, true);
-        }
-
-        public bool WriteLines(List<string> contents, bool append)
-        {
-            try
-            {
-                int written = 0;
-                MultiAction = true;
-                foreach (var item in contents)
-                {
-                    if (WriteLine(item, append))
-                    {
-                        written++;
-                    }
-                }
-                return written == contents.Count;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            finally
-            {
-                MultiAction = false;
-                FinishWrite();
-            }
-        }
-
-        public bool WriteCSV<T>(List<T> data)
-        {
-            try
-            {
-                if (!FilePath.EndsWith(".csv"))
-                {
-                    throw new FileNotFoundException();
-                }
-                if (data == null)
-                {
-                    throw new ArgumentNullException();
-                }
-                return WriteLines(CSVConverter.SerializeBlock<T>(data));
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        public bool WriteJSON<T>(List<T> data)
-        {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch (Exception)
-            {
-
-                throw new NotImplementedException();
-            }
-        }
-
-        public bool WriteXML<T>(List<T> data)
-        {
-            try
-            {
-                throw new NotImplementedException();
-            }
-            catch (Exception)
-            {
-
-                throw new NotImplementedException();
             }
         }
     }
