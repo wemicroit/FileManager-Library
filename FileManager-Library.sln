@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2046
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileManager", "FIleConverter\FileManager.csproj", "{274567DD-CC62-4CB1-86FF-E9C9BB8E9247}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileManager", "FileManager\FileManager.csproj", "{274567DD-CC62-4CB1-86FF-E9C9BB8E9247}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FIleManagerPlus", "FIleConverter+\FIleManagerPlus.csproj", "{7FA7A42E-A5A3-4397-AF6A-9393E19EB303}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FIleManagerPlus", "FileManager+\FIleManagerPlus.csproj", "{7FA7A42E-A5A3-4397-AF6A-9393E19EB303}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileManager-Tests", "FileManager-Tests\FileManager-Tests.csproj", "{1293DED4-4084-4C47-AD73-1E051B92F616}"
 EndProject
