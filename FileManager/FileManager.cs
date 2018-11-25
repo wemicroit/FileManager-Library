@@ -10,103 +10,22 @@ namespace WeMicroIt.Utils.FileConverter
 {
     public partial class FileManager : IFileManager
     {
-        private static string DirectoryPath { get; set; }
-        private static string FilePath { get; set; }
         private static bool MultiAction { get; set; }
 
         private static StreamReader Reader { get; set; }
         private static StreamWriter Writer { get; set; }
+        private string readerPath { get; set; }
+        private string writerPath { get; set; }
 
         public static JSONConverter.JSONConverter JSONConverter { get; set; }
         public static XMLConverter.XMLConverter XMLConverter { get; set; }
 
         public FileManager()
         {
-            DirectoryPath = Directory.GetCurrentDirectory();
+            readerPath = Directory.GetCurrentDirectory();
             //CSVConverter = new CSVConverter.CSVConverter();
             JSONConverter = new JSONConverter.JSONConverter();
             XMLConverter = new XMLConverter.XMLConverter();
-        }
-
-        public string SetDirectoryPath(string path)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(path))
-                {
-                    DirectoryPath = Directory.GetCurrentDirectory();
-                }
-                else
-                {
-                    DirectoryPath = path;
-                }
-                return DirectoryPath;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        public string SetFilePath(string path)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(path))
-                {
-                    FilePath = DateTimeOffset.Now.Date.ToShortDateString();
-                }
-                else
-                {
-                    FilePath = path;
-                }
-                return FilePath;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        private string GetFullPath()
-        {
-            return Path.Combine(DirectoryPath, FilePath);
-        }
-
-        public List<string> GetFiles()
-        {
-            return GetFiles(null);
-        }
-
-        public List<string> GetFiles(string filter)
-        {
-            if (true)
-            {
-
-            }
-            /*var options = new EnumerationOptions()
-            {
-                //MatchCasing = MatchCasing.CaseInsensitive,
-                RecurseSubdirectories = true,
-                IgnoreInaccessible = true,
-            };*/
-            return GetFiles(filter, null);
-        }
-
-        public List<string> GetFiles(string filter, string options)
-        {
-            try
-            {
-                if (!CheckDirectory())
-                {
-                    throw new DirectoryNotFoundException();
-                }
-                return Directory.GetFiles(DirectoryPath,"").Select(x => x.Replace(DirectoryPath, "")).ToList();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
         }
 
         public bool CheckDirectory()
@@ -118,15 +37,24 @@ namespace WeMicroIt.Utils.FileConverter
         {
             try
             {
-                if (string.IsNullOrEmpty(DirectoryPath))
+                if (string.IsNullOrEmpty(readerPath))
                 {
                     throw new ArgumentNullException();
                 }
                 if (create)
                 {
-                    Directory.CreateDirectory(DirectoryPath);
+                    Directory.CreateDirectory(readerPath);
                 }
-                return (Directory.Exists(DirectoryPath));
+                if (string.IsNullOrEmpty(writerPath))
+                {
+                    throw new ArgumentNullException();
+                }
+                if (create)
+                {
+                    Directory.CreateDirectory(writerPath);
+                }
+
+                return (Directory.Exists(readerPath) || Directory.Exists(writerPath));
             }
             catch (Exception)
             {
@@ -136,27 +64,32 @@ namespace WeMicroIt.Utils.FileConverter
 
         public bool CheckFile()
         {
-            return CheckFile(false);
+            return CheckFile(readerPath);
         }
 
-        public bool CheckFile(bool create)
+        public bool CheckFile(string path)
+        {
+            return CheckFile(path, false);
+        }
+
+        public bool CheckFile(string path, bool create)
         {
             try
             {
+                if (string.IsNullOrEmpty(path))
+                {
+                    throw new ArgumentNullException();
+                }
                 if (CheckDirectory(create))
                 {
-                    if (string.IsNullOrEmpty(FilePath))
-                    {
-                        throw new ArgumentNullException();
-                    }
-                    if (File.Exists(GetFullPath()))
+                    if (File.Exists(path))
                     {
                         return true;
                     }
                     else if (create)
                     {
-                        File.Create(GetFullPath());
-                        return File.Exists(GetFullPath());
+                        File.Create(path);
+                        return File.Exists(path);
                     }
                 }
                 return false;

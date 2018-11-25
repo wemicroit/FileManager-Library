@@ -13,6 +13,19 @@ namespace WeMicroIt.Utils.FileConverter
             return StartWrite(false);
         }
 
+        public string SetWriter(string path)
+        {
+            try
+            {
+                writerPath = path;
+                return writerPath;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         private bool StartWrite(bool append)
         {
             try
@@ -20,7 +33,7 @@ namespace WeMicroIt.Utils.FileConverter
                 FinishRead();
                 if (Writer == null)
                 {
-                    Writer = new StreamWriter(GetFullPath(), append);
+                    Writer = new StreamWriter(writerPath, append);
                 }
                 return Writer != null;
             }
@@ -146,7 +159,7 @@ namespace WeMicroIt.Utils.FileConverter
         {
             try
             {
-                if (!FilePath.EndsWith(".csv"))
+                if (!writerPath.EndsWith(".csv"))
                 {
                     throw new FileNotFoundException();
                 }
@@ -185,7 +198,7 @@ namespace WeMicroIt.Utils.FileConverter
         {
             try
             {
-                if (!FilePath.EndsWith(".json"))
+                if (!writerPath.EndsWith(".json"))
                 {
                     throw new FileNotFoundException();
                 }
@@ -219,7 +232,7 @@ namespace WeMicroIt.Utils.FileConverter
         {
             try
             {
-                if (!FilePath.EndsWith(".xml"))
+                if (!writerPath.EndsWith(".xml"))
                 {
                     throw new FileNotFoundException();
                 }
