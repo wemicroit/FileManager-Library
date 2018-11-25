@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FIleConverter\FileManager.csproj" />
+    <ProjectReference Include="..\FileManager\FileManager.csproj" />
   </ItemGroup>
 
 </Project>

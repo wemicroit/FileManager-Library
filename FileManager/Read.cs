@@ -123,7 +123,8 @@ namespace WeMicroIt.Utils.FileConverter
                 {
                     throw new FileNotFoundException();
                 }
-                return CSVConverter.DeSerializeBlock<T>(ReadFile(), headers);
+                throw new NotImplementedException();
+                //return CSVConverter.DeSerializeBlock<T>(ReadFile(), headers);
             }
             catch (Exception)
             {

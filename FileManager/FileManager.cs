@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using WeMicroIt.Utils.CSVConverter;
+//using WeMicroIt.Utils.CSVConverter;
 using WeMicroIt.Utils.FileConverter.Interfaces;
 
 namespace WeMicroIt.Utils.FileConverter
@@ -17,15 +17,13 @@ namespace WeMicroIt.Utils.FileConverter
         private static StreamReader Reader { get; set; }
         private static StreamWriter Writer { get; set; }
 
-
-        public static CSVConverter.CSVConverter CSVConverter { get; set; }
         public static JSONConverter.JSONConverter JSONConverter { get; set; }
         public static XMLConverter.XMLConverter XMLConverter { get; set; }
 
         public FileManager()
         {
             DirectoryPath = Directory.GetCurrentDirectory();
-            CSVConverter = new CSVConverter.CSVConverter();
+            //CSVConverter = new CSVConverter.CSVConverter();
             JSONConverter = new JSONConverter.JSONConverter();
             XMLConverter = new XMLConverter.XMLConverter();
         }
@@ -82,16 +80,20 @@ namespace WeMicroIt.Utils.FileConverter
 
         public List<string> GetFiles(string filter)
         {
-            var options = new EnumerationOptions()
+            if (true)
             {
-                MatchCasing = MatchCasing.CaseInsensitive,
+
+            }
+            /*var options = new EnumerationOptions()
+            {
+                //MatchCasing = MatchCasing.CaseInsensitive,
                 RecurseSubdirectories = true,
                 IgnoreInaccessible = true,
-            };
-            return GetFiles(filter, options);
+            };*/
+            return GetFiles(filter, null);
         }
 
-        public List<string> GetFiles(string filter, EnumerationOptions options)
+        public List<string> GetFiles(string filter, string options)
         {
             try
             {

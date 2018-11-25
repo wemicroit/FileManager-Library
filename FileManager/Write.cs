@@ -154,7 +154,8 @@ namespace WeMicroIt.Utils.FileConverter
                 {
                     throw new ArgumentNullException();
                 }
-                return WriteLines(CSVConverter.SerializeBlock<T>(data), Append);
+                throw new NotImplementedException();
+                //return WriteLines(CSVConverter.SerializeBlock<T>(data), Append);
             }
             catch (Exception)
             {
