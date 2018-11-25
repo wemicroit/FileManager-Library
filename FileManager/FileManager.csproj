@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
     <AssemblyName>WeMicroIt.Utils.FileConverter</AssemblyName>
     <RootNamespace>WeMicroIt.Utils.FileConverter</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -16,9 +16,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WeMicroIt.Utils.CSVConverter" Version="1.0.0-RC1" />
     <PackageReference Include="WeMicroIt.Utils.JSONConverter" Version="0.5.0-Beta2" />
     <PackageReference Include="WeMicroIt.Utils.XMLConverter" Version="0.5.0-Beta2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
   </ItemGroup>
 
 </Project>
