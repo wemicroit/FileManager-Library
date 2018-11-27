@@ -6,6 +6,8 @@ using System.Text;
 //using WeMicroIt.Utils.CSVConverter;
 using WeMicroIt.Utils.FileConverter.Interfaces;
 using WeMicroIt.Utils.FileConverter.Models;
+using WeMicroIt.Utils.JSONConverter;
+using WeMicroIt.Utils.XMLConverter;
 
 namespace WeMicroIt.Utils.FileConverter
 {
@@ -13,21 +15,21 @@ namespace WeMicroIt.Utils.FileConverter
     {
         private static bool MultiAction { get; set; }
 
-        private static StreamReader Reader { get; set; }
-        private static StreamWriter Writer { get; set; }
+        private static StreamReader reader { get; set; }
+        private static StreamWriter writer { get; set; }
         public static FileDetails ReaderInfo {get; set;}
         public static FileDetails WriterInfo { get; set; }
         public static FileDetails TransformerInfo { get; set; }
         public static FileDetails TemplateInfo { get; set; }
 
-        public static JSONConverter.JSONConverter JSONConverter { get; set; }
-        public static XMLConverter.XMLConverter XMLConverter { get; set; }
+        public static JSONConversion JSONConverter { get; set; }
+        public static XMLConversion XMLConverter { get; set; }
 
         public FileManager()
         {
             //CSVConverter = new CSVConverter.CSVConverter();
-            JSONConverter = new JSONConverter.JSONConverter();
-            XMLConverter = new XMLConverter.XMLConverter();
+            JSONConverter = new JSONConversion();
+            XMLConverter = new XMLConversion();
 
             ReaderInfo = new FileDetails();
             WriterInfo = new FileDetails();

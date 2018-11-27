@@ -18,11 +18,11 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="WeMicroIt.Utils.XMLConverter" Version="0.5.0-Beta3" />
-    <PackageReference Include="WeMicroIt.Utils.JSONConverter" Version="0.5.0-Beta3" />
+    <PackageReference Include="WeMicroIt.Utils.JSONConverter" Version="0.5.0-Beta4" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\XMLConverter-Library\XMLConverter\XMLConverter.csproj" />
   </ItemGroup>
 
   <ItemGroup>
