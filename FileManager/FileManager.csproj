@@ -6,7 +6,7 @@
     <AssemblyName>WeMicroIt.Utils.FileConverter</AssemblyName>
     <RootNamespace>WeMicroIt.Utils.FileConverter</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.5.0-Alpha1</Version>
+    <Version>0.5.0-Beta4</Version>
     <Authors>James Thompson</Authors>
     <Company>WeMicroIt</Company>
     <Product>FileConverter</Product>
@@ -23,6 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resource\" />
   </ItemGroup>
 </Project>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 //using WeMicroIt.Utils.CSVConverter;
 using WeMicroIt.Utils.FileConverter.Interfaces;
+using WeMicroIt.Utils.FileConverter.Models;
 
 namespace WeMicroIt.Utils.FileConverter
 {
@@ -14,90 +15,69 @@ namespace WeMicroIt.Utils.FileConverter
 
         private static StreamReader Reader { get; set; }
         private static StreamWriter Writer { get; set; }
-        private string readerPath { get; set; }
-        private string writerPath { get; set; }
+        public static FileDetails ReaderInfo {get; set;}
+        public static FileDetails WriterInfo { get; set; }
+        public static FileDetails TransformerInfo { get; set; }
+        public static FileDetails TemplateInfo { get; set; }
 
         public static JSONConverter.JSONConverter JSONConverter { get; set; }
         public static XMLConverter.XMLConverter XMLConverter { get; set; }
 
         public FileManager()
         {
-            readerPath = Directory.GetCurrentDirectory();
             //CSVConverter = new CSVConverter.CSVConverter();
             JSONConverter = new JSONConverter.JSONConverter();
             XMLConverter = new XMLConverter.XMLConverter();
+
+            ReaderInfo = new FileDetails();
+            WriterInfo = new FileDetails();
+            TransformerInfo = new FileDetails();
+            TemplateInfo = new FileDetails();
+
+            ReaderInfo.FullPath = Directory.GetCurrentDirectory();
+            TransformerInfo.FullPath = Directory.GetCurrentDirectory();
         }
 
-        public bool CheckDirectory()
+        public bool setFiles(string read, string write, string transform, string template)
         {
-            return CheckDirectory(false);
-        }
-
-        public bool CheckDirectory(bool create)
-        {
-            try
+            if (!string.IsNullOrEmpty(read))
             {
-                if (string.IsNullOrEmpty(readerPath))
-                {
-                    throw new ArgumentNullException();
-                }
-                if (create)
-                {
-                    Directory.CreateDirectory(readerPath);
-                }
-                if (string.IsNullOrEmpty(writerPath))
-                {
-                    throw new ArgumentNullException();
-                }
-                if (create)
-                {
-                    Directory.CreateDirectory(writerPath);
-                }
-
-                return (Directory.Exists(readerPath) || Directory.Exists(writerPath));
+                ReaderInfo.FullPath = read;
             }
-            catch (Exception)
+            if (!string.IsNullOrEmpty(write))
             {
-                return false;
+                WriterInfo.FullPath = write;
             }
+            if (!string.IsNullOrEmpty(transform))
+            {
+                TransformerInfo.FullPath = transform;
+            }
+            if (!string.IsNullOrEmpty(template))
+            {
+                TemplateInfo.FullPath = template;
+            }
+            return true;
         }
 
-        public bool CheckFile()
+        public bool FilesSet(bool read, bool write, bool transform, bool template)
         {
-            return CheckFile(readerPath);
-        }
-
-        public bool CheckFile(string path)
-        {
-            return CheckFile(path, false);
-        }
-
-        public bool CheckFile(string path, bool create)
-        {
-            try
+            if (read)
             {
-                if (string.IsNullOrEmpty(path))
-                {
-                    throw new ArgumentNullException();
-                }
-                if (CheckDirectory(create))
-                {
-                    if (File.Exists(path))
-                    {
-                        return true;
-                    }
-                    else if (create)
-                    {
-                        File.Create(path);
-                        return File.Exists(path);
-                    }
-                }
-                return false;
+                ReaderInfo.CheckFile();
             }
-            catch (Exception)
+            if (write)
             {
-                return false;
+                WriterInfo.CheckDirectory();
             }
+            if (transform)
+            {
+                TransformerInfo.CheckDirectory();
+            }
+            if (template)
+            {
+                TemplateInfo.CheckFile();
+            }
+            return true;
         }
     }
 }

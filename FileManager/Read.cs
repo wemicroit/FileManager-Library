@@ -13,100 +13,37 @@ namespace WeMicroIt.Utils.FileConverter
 {
     public partial class FileManager : IFileManager
     {
-        public string SetFilePath(string path)
-        {
-            try
-            {
-                readerPath = path;
-                return path;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        public List<string> GetFiles()
-        {
-            return GetFiles(null);
-        }
-
-        public List<string> GetFiles(string filter)
-        {
-            if (true)
-            {
-
-            }
-            /*var options = new EnumerationOptions()
-            {
-                //MatchCasing = MatchCasing.CaseInsensitive,
-                RecurseSubdirectories = true,
-                IgnoreInaccessible = true,
-            };*/
-            return GetFiles(filter, null);
-        }
-
-        public List<string> GetFiles(string filter, string options)
-        {
-            try
-            {
-                if (!CheckDirectory())
-                {
-                    throw new DirectoryNotFoundException();
-                }
-                return Directory.GetFiles(readerPath, "").Select(x => x.Replace(readerPath, "")).ToList();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
         private bool StartRead()
         {
-            try
+            FinishWrite();
+            if (reader == null)
             {
-                FinishWrite();
-                if (Reader == null)
-                {
-                    Reader = new StreamReader(readerPath);
-                }
-                return Reader != null;
+                reader = ReaderInfo.CheckFile() ? new StreamReader(ReaderInfo.FullPath) : null;
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            return reader != null ? true : throw new FileNotFoundException();
         }
 
         private bool FinishRead()
         {
-            try
+            if (!MultiAction && reader != null)
             {
-                if (!MultiAction && Reader != null)
-                {
-                    Reader.Close();
-                    Reader.Dispose();
-                    Reader = null;
-                }
-                return Reader == null;
+                reader.Close();
+                reader.Dispose();
+                reader = null;
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            return reader == null;
         }
 
         public string ReadFile()
         {
             try
             {
-                if (!CheckFile(readerPath))
-                {
-                    throw new FileNotFoundException();
-                }
                 StartRead();
-                return Reader.ReadToEnd();
+                return reader.ReadToEnd();
+            }
+            catch (FileNotFoundException)
+            {
+                throw new FileNotFoundException();
             }
             catch (Exception)
             {
@@ -122,13 +59,13 @@ namespace WeMicroIt.Utils.FileConverter
         {
             try
             {
-                if (!CheckFile(readerPath))
-                {
-                    throw new FileNotFoundException();
-                }
                 StartRead();
-                Reader.ReadToEnd();
-                return Reader.BaseStream;
+                reader.ReadToEnd();
+                return reader.BaseStream;
+            }
+            catch (FileNotFoundException)
+            {
+                throw new FileNotFoundException();
             }
             catch (Exception)
             {
@@ -144,12 +81,12 @@ namespace WeMicroIt.Utils.FileConverter
         {
             try
             {
-                if (!CheckFile(readerPath))
-                {
-                    throw new FileNotFoundException();
-                }
                 StartRead();
-                return Reader.ReadLine();
+                return reader.ReadLine();
+            }
+            catch (FileNotFoundException)
+            {
+                throw new FileNotFoundException();
             }
             catch (Exception)
             {
@@ -165,16 +102,16 @@ namespace WeMicroIt.Utils.FileConverter
         {
             try
             {
-                if (!CheckFile(readerPath))
-                {
-                    throw new FileNotFoundException();
-                }
                 List<string> contents = new List<string>();
-                while (!Reader.EndOfStream)
+                while (!reader.EndOfStream)
                 {
                     contents.Add(ReadLine());
                 }
                 return contents;
+            }
+            catch (FileNotFoundException)
+            {
+                throw new FileNotFoundException();
             }
             catch (Exception)
             {
@@ -193,71 +130,62 @@ namespace WeMicroIt.Utils.FileConverter
 
         public List<T> ReadCSV<T>(bool headers)
         {
-            try
+            if (ReaderInfo.IsCSV)
             {
-                if (!readerPath.EndsWith(".csv"))
+                try
                 {
-                    throw new FileNotFoundException();
+                    throw new NotImplementedException();
                 }
-                throw new NotImplementedException();
-                //return CSVConverter.DeSerializeBlock<T>(ReadFile(), headers);
+                catch (Exception)
+                {
+                    return null;
+                }
+                finally
+                {
+                    FinishRead();
+                }
             }
-            catch (Exception)
-            {
-                return null;
-            }
+            throw new NotSupportedException();
         }
 
         public List<T> ReadJSON<T>()
         {
-            try
+            if (ReaderInfo.IsJSON)
             {
-                if (!readerPath.EndsWith(".json"))
+                try
                 {
-                    throw new FileNotFoundException();
-                };
-                return JSONConverter.DeSerializeObjects<T>(ReadFile());
+                    throw new NotImplementedException();
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+                finally
+                {
+                    FinishRead();
+                }
             }
-            catch (Exception)
-            {
-                return null;
-            }
+            throw new NotSupportedException();
         }
 
-        public List<T> ReadXML<T>()
+        public T ReadXML<T>()
         {
-            try
+            if (ReaderInfo.IsXML)
             {
-                if (!readerPath.EndsWith(".xml"))
+                try
                 {
-                    throw new FileNotFoundException();
+                    return XMLConverter.DeSerializeObjects<T>(ReaderInfo.FullPath);
                 }
-                //return XMLConverter.DeSerializeObjects<T>(ReadFile());
-                XmlDocument doc = new XmlDocument();
-                doc.LoadXml(ReadFile());
-
-                string jsonText = JsonConvert.SerializeXmlNode(doc).Replace("\"?xml\":{\"@version\":\"1.0\"},", "");
-                List<T> list2 = JSONConverter.DeSerializeObjects<T>(jsonText);
-
-                List<T> list = null;
-                foreach (var item in list)
+                catch (Exception)
                 {
-                    Console.WriteLine(item);
+                    return default(T);
                 }
-                FinishRead();
-                return list;
-
+                finally
+                {
+                    FinishRead();
+                }
             }
-            catch (Exception exc)
-            {
-
-                throw new NotImplementedException();
-            }
-            finally
-            {
-                FinishRead();
-            }
+            throw new NotSupportedException();
         }
-
     }
 }

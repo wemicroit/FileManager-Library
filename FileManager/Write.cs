@@ -13,64 +13,42 @@ namespace WeMicroIt.Utils.FileConverter
             return StartWrite(false);
         }
 
-        public string SetWriter(string path)
-        {
-            try
-            {
-                writerPath = path;
-                return writerPath;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
         private bool StartWrite(bool append)
         {
-            try
+            FinishRead();
+            if (writer == null)
             {
-                FinishRead();
-                if (Writer == null)
+                if (!WriterInfo.CheckDirectory())
                 {
-                    Writer = new StreamWriter(writerPath, append);
+                    throw new DirectoryNotFoundException();
                 }
-                return Writer != null;
+                writer = WriterInfo.CheckFile(true) ? new StreamWriter(ReaderInfo.FullPath, append) : null;
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            return writer != null ? true : throw new FileNotFoundException();
         }
 
         private bool FinishWrite()
         {
-            try
+            if (!MultiAction && writer != null)
             {
-                if (!MultiAction && Writer != null)
-                {
-                    Writer.Close();
-                    Writer.Dispose();
-                    Writer = null;
-                }
-                return Writer == null;
+                writer.Close();
+                writer.Dispose();
+                writer = null;
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            return writer == null;
         }
 
         private bool Write(string contents, bool append)
         {
             try
             {
-                if (!StartWrite(append))
-                {
-                    throw new InvalidOperationException();
-                }
-                Writer.Write(contents);
+                StartWrite(append);
+                writer.Write(contents);
                 return true;
+            }
+            catch (DirectoryNotFoundException)
+            {
+                throw new DirectoryNotFoundException();
             }
             catch (Exception)
             {
@@ -96,13 +74,13 @@ namespace WeMicroIt.Utils.FileConverter
         {
             try
             {
-                if (!StartWrite(append))
-                {
-                    throw new InvalidOperationException();
-                }
-                Writer.WriteLine(contents);
+                StartWrite(append);
+                writer.WriteLine(contents);
                 return true;
-
+            }
+            catch (DirectoryNotFoundException)
+            {
+                throw new DirectoryNotFoundException();
             }
             catch (Exception)
             {
@@ -132,7 +110,15 @@ namespace WeMicroIt.Utils.FileConverter
                         written++;
                     }
                 }
-                return written == contents.Count;
+                return written == contents.Count? true : throw new DataMisalignedException();
+            }
+            catch (DirectoryNotFoundException)
+            {
+                throw new DirectoryNotFoundException();
+            }
+            catch (DataMisalignedException)
+            {
+                throw new DataMisalignedException();
             }
             catch (Exception)
             {
@@ -157,28 +143,21 @@ namespace WeMicroIt.Utils.FileConverter
 
         public bool WriteCSV<T>(List<T> data, bool Append)
         {
-            try
+            if (WriterInfo.IsCSV)
             {
-                if (!writerPath.EndsWith(".csv"))
-                {
-                    throw new FileNotFoundException();
-                }
                 if (data == null)
                 {
                     throw new ArgumentNullException();
                 }
-                throw new NotImplementedException();
                 //return WriteLines(CSVConverter.SerializeBlock<T>(data), Append);
+                throw new NotImplementedException();
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            throw new NotSupportedException();
         }
 
         public bool AppendJSON<T>(List<T> data)
         {
-            try
+            if (WriterInfo.IsJSON)
             {
                 var fullData = ReadJSON<T>();
                 if (fullData == null)
@@ -188,60 +167,40 @@ namespace WeMicroIt.Utils.FileConverter
                 fullData.AddRange(data);
                 return WriteJSON<T>(fullData);
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            throw new NotSupportedException();
         }
 
         public bool WriteJSON<T>(List<T> data)
         {
-            try
+            if (WriterInfo.IsJSON)
             {
-                if (!writerPath.EndsWith(".json"))
-                {
-                    throw new FileNotFoundException();
-                }
                 return WriteBlock(JSONConverter.SerializeObjects(data));
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            throw new NotSupportedException();
         }
 
         public bool AppendXML<T>(List<T> data)
         {
-            try
+            if (WriterInfo.IsXML)
             {
                 var fullData = ReadXML<T>();
                 if (fullData == null)
                 {
-                    fullData = new List<T>();
+                    //fullData = new List<T>();
                 }
-                fullData.AddRange(data);
+                //fullData.AddRange(data);
                 return WriteXML<T>(fullData);
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            throw new NotSupportedException();
         }
 
-        public bool WriteXML<T>(List<T> data)
+        public bool WriteXML<T>(T data)
         {
-            try
+            if (WriterInfo.IsXML)
             {
-                if (!writerPath.EndsWith(".xml"))
-                {
-                    throw new FileNotFoundException();
-                }
                 return WriteBlock(XMLConverter.SerializeObjects(data));
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            throw new NotSupportedException();
         }
     }
 }
