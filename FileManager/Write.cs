@@ -2,133 +2,75 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml.Linq;
 using WeMicroIt.Utils.FileConverter.Interfaces;
+using WeMicroIt.Utils.FileConverter.Resource;
 
 namespace WeMicroIt.Utils.FileConverter
 {
     public partial class FileManager : IFileManager
     {
-        private bool StartWrite()
+        private bool write(object content, bool append, FileIOType ioType)
         {
-            return StartWrite(false);
-        }
-
-        private bool StartWrite(bool append)
-        {
-            FinishRead();
-            if (writer == null)
+            if (content == null)
             {
-                if (!WriterInfo.CheckDirectory())
-                {
-                    throw new DirectoryNotFoundException();
-                }
-                writer = WriterInfo.CheckFile(true) ? new StreamWriter(ReaderInfo.FullPath, append) : null;
+                throw new ArgumentNullException();
             }
-            return writer != null ? true : throw new FileNotFoundException();
-        }
-
-        private bool FinishWrite()
-        {
-            if (!MultiAction && writer != null)
-            {
-                writer.Close();
-                writer.Dispose();
-                writer = null;
-            }
-            return writer == null;
-        }
-
-        private bool Write(string contents, bool append)
-        {
-            try
-            {
-                StartWrite(append);
-                writer.Write(contents);
-                return true;
-            }
-            catch (DirectoryNotFoundException)
+            if (!WriterInfo.CheckDirectory())
             {
                 throw new DirectoryNotFoundException();
             }
-            catch (Exception)
+            if (!WriterInfo.CheckFile(true))
             {
-                return false;
+                throw new FileNotFoundException();
             }
-            finally
+            using (StreamWriter writer = new StreamWriter(WriterInfo.FullPath, append))
             {
-                FinishWrite();
+                switch (ioType)
+                {
+                    case FileIOType.Block:
+                        writer.Write(content);
+                        break;
+                    case FileIOType.Lines:
+                        writer.Write(content);
+                        break;
+                    case FileIOType.Line:
+                        writer.WriteLine(content);
+                        break;
+                    case FileIOType.Data:
+                        writer.Write(content);
+                        break;
+                    default:
+                        break;
+                }
+                
             }
+            return true; ;
         }
 
         public bool WriteBlock(string contents)
         {
-            return Write(contents, false);
+            return write(contents, false, FileIOType.Block);
         }
 
         public bool WriteLine(string contents)
         {
-            return Write(contents, true);
+            return WriteLine(contents, false);
         }
 
         public bool WriteLine(string contents, bool append)
         {
-            try
-            {
-                StartWrite(append);
-                writer.WriteLine(contents);
-                return true;
-            }
-            catch (DirectoryNotFoundException)
-            {
-                throw new DirectoryNotFoundException();
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            finally
-            {
-                FinishWrite();
-            }
+            return write(string.Join(contents, "\r\n"), append, FileIOType.Line);
         }
 
         public bool WriteLines(List<string> contents)
         {
-            return WriteLines(contents, true);
+            return WriteLines(contents, false);
         }
 
         public bool WriteLines(List<string> contents, bool append)
         {
-            try
-            {
-                int written = 0;
-                MultiAction = true;
-                foreach (var item in contents)
-                {
-                    if (WriteLine(item, append))
-                    {
-                        written++;
-                    }
-                }
-                return written == contents.Count? true : throw new DataMisalignedException();
-            }
-            catch (DirectoryNotFoundException)
-            {
-                throw new DirectoryNotFoundException();
-            }
-            catch (DataMisalignedException)
-            {
-                throw new DataMisalignedException();
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            finally
-            {
-                MultiAction = false;
-                FinishWrite();
-            }
+            return write(string.Join("\r\n", contents), append, FileIOType.Lines);
         }
 
         public bool AppendCSV<T>(List<T> data)
@@ -145,10 +87,7 @@ namespace WeMicroIt.Utils.FileConverter
         {
             if (WriterInfo.IsCSV)
             {
-                if (data == null)
-                {
-                    throw new ArgumentNullException();
-                }
+                return WriteLines(null, Append);
                 //return WriteLines(CSVConverter.SerializeBlock<T>(data), Append);
                 throw new NotImplementedException();
             }
@@ -174,7 +113,7 @@ namespace WeMicroIt.Utils.FileConverter
         {
             if (WriterInfo.IsJSON)
             {
-                return WriteBlock(JSONConverter.SerializeObjects(data));
+                return write(JSONConverter.SerializeObjects(data), false, FileIOType.Block);
             }
             throw new NotSupportedException();
         }
@@ -198,7 +137,7 @@ namespace WeMicroIt.Utils.FileConverter
         {
             if (WriterInfo.IsXML)
             {
-                return WriteBlock(XMLConverter.SerializeObjects(data));
+                return write(XMLConverter.SerializeObjects(data),false, FileIOType.Block);
             }
             throw new NotSupportedException();
         }

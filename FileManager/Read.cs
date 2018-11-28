@@ -8,119 +8,64 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using WeMicroIt.Utils.FileConverter.Interfaces;
+using WeMicroIt.Utils.FileConverter.Resource;
 
 namespace WeMicroIt.Utils.FileConverter
 {
     public partial class FileManager : IFileManager
     {
-        private bool StartRead()
+        private bool read(FileIOType ioType, out object content)
         {
-            FinishWrite();
-            if (reader == null)
+            content = null;
+            using (StreamReader reader = new StreamReader(ReaderInfo.FullPath))
             {
-                reader = ReaderInfo.CheckFile() ? new StreamReader(ReaderInfo.FullPath) : null;
+                switch (ioType)
+                {
+                    case FileIOType.Block:
+                        content = reader.ReadToEnd();
+                        return true;
+                    case FileIOType.Lines:
+                        var listing = new List<string>();
+                        while(!reader.EndOfStream)
+                        {
+                            listing.Add(reader.ReadLine());
+                        }
+                        content = listing;
+                        return true;
+                    case FileIOType.Line:
+                        content = reader.ReadLine();
+                        return true;
+                    case FileIOType.Data:
+                        content = reader.Read();
+                        return true;
+                    case FileIOType.Stream:
+                        string temp = reader.ReadToEnd();
+                        content = reader.BaseStream;
+                        return true;
+                }
             }
-            return reader != null ? true : throw new FileNotFoundException();
-        }
-
-        private bool FinishRead()
-        {
-            if (!MultiAction && reader != null)
-            {
-                reader.Close();
-                reader.Dispose();
-                reader = null;
-            }
-            return reader == null;
+            return false;
         }
 
         public string ReadFile()
         {
-            try
-            {
-                StartRead();
-                return reader.ReadToEnd();
-            }
-            catch (FileNotFoundException)
-            {
-                throw new FileNotFoundException();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-            finally
-            {
-                FinishRead();
-            }
-        }
-
-        public Stream ReadStream()
-        {
-            try
-            {
-                StartRead();
-                reader.ReadToEnd();
-                return reader.BaseStream;
-            }
-            catch (FileNotFoundException)
-            {
-                throw new FileNotFoundException();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-            finally
-            {
-                FinishRead();
-            }
+            object data;
+            read(FileIOType.Block, out data);
+            return (string)data;
         }
 
         public string ReadLine()
         {
-            try
-            {
-                StartRead();
-                return reader.ReadLine();
-            }
-            catch (FileNotFoundException)
-            {
-                throw new FileNotFoundException();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-            finally
-            {
-                FinishRead();
-            }
+            object data;
+            read(FileIOType.Line, out data);
+            return (string)data;
         }
 
         public List<string> ReadLines()
         {
-            try
-            {
-                List<string> contents = new List<string>();
-                while (!reader.EndOfStream)
-                {
-                    contents.Add(ReadLine());
-                }
-                return contents;
-            }
-            catch (FileNotFoundException)
-            {
-                throw new FileNotFoundException();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-            finally
-            {
-                FinishRead();
-            }
+            object data;
+            read(FileIOType.Lines, out data);
+            return (List<string>)data;
         }
 
         public List<T> ReadCSV<T>()
@@ -132,18 +77,7 @@ namespace WeMicroIt.Utils.FileConverter
         {
             if (ReaderInfo.IsCSV)
             {
-                try
-                {
-                    throw new NotImplementedException();
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
-                finally
-                {
-                    FinishRead();
-                }
+                throw new NotImplementedException();
             }
             throw new NotSupportedException();
         }
@@ -152,18 +86,8 @@ namespace WeMicroIt.Utils.FileConverter
         {
             if (ReaderInfo.IsJSON)
             {
-                try
-                {
-                    throw new NotImplementedException();
-                }
-                catch (Exception)
-                {
-                    return null;
-                }
-                finally
-                {
-                    FinishRead();
-                }
+                string data = ReadFile();
+                throw new NotImplementedException();
             }
             throw new NotSupportedException();
         }
@@ -172,18 +96,7 @@ namespace WeMicroIt.Utils.FileConverter
         {
             if (ReaderInfo.IsXML)
             {
-                try
-                {
-                    return XMLConverter.DeSerializeObjects<T>(ReaderInfo.FullPath);
-                }
-                catch (Exception)
-                {
-                    return default(T);
-                }
-                finally
-                {
-                    FinishRead();
-                }
+                return XMLConverter.DeSerializeObjects<T>(ReaderInfo.FullPath);
             }
             throw new NotSupportedException();
         }

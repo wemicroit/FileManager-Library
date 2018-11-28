@@ -15,8 +15,6 @@ namespace WeMicroIt.Utils.FileConverter
     {
         private static bool MultiAction { get; set; }
 
-        private static StreamReader reader { get; set; }
-        private static StreamWriter writer { get; set; }
         public static FileDetails ReaderInfo {get; set;}
         public static FileDetails WriterInfo { get; set; }
         public static FileDetails TransformerInfo { get; set; }
@@ -40,7 +38,7 @@ namespace WeMicroIt.Utils.FileConverter
             TransformerInfo.FullPath = Directory.GetCurrentDirectory();
         }
 
-        public bool setFiles(string read, string write, string transform, string template)
+        public bool setFiles(string read, string write, string template)
         {
             if (!string.IsNullOrEmpty(read))
             {
@@ -50,10 +48,6 @@ namespace WeMicroIt.Utils.FileConverter
             {
                 WriterInfo.FullPath = write;
             }
-            if (!string.IsNullOrEmpty(transform))
-            {
-                TransformerInfo.FullPath = transform;
-            }
             if (!string.IsNullOrEmpty(template))
             {
                 TemplateInfo.FullPath = template;
@@ -61,7 +55,7 @@ namespace WeMicroIt.Utils.FileConverter
             return true;
         }
 
-        public bool FilesSet(bool read, bool write, bool transform, bool template)
+        public bool FilesSet(bool read, bool write, bool template)
         {
             if (read)
             {
@@ -70,10 +64,6 @@ namespace WeMicroIt.Utils.FileConverter
             if (write)
             {
                 WriterInfo.CheckDirectory();
-            }
-            if (transform)
-            {
-                TransformerInfo.CheckDirectory();
             }
             if (template)
             {
