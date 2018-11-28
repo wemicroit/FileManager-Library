@@ -133,6 +133,15 @@ namespace WeMicroIt.Utils.FileConverter
             throw new NotSupportedException();
         }
 
+        public bool WriteXML(XElement data)
+        {
+            if (WriterInfo.IsXML)
+            {
+                return write(data.ToString(),false, FileIOType.Block);
+            }
+            throw new NotSupportedException();
+        }
+
         public bool WriteXML<T>(T data)
         {
             if (WriterInfo.IsXML)
