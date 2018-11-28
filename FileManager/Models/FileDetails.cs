@@ -11,6 +11,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
         public string DirPath { get; set; }
         public string FileName { get; set; } = "temp";
         public string FileExt { get; set; } = "xml";
+        private List<string> xmls = new List<string>() { "xml", "html" };
 
         public FileDetails()
         {
@@ -64,13 +65,18 @@ namespace WeMicroIt.Utils.FileConverter.Models
         {
             get
             {
-                return checkExtension("xml");
+                return checkExtension(xmls);
             }
+        }
+
+        private bool checkExtension(List<string> supported)
+        {
+            return supported.Contains(FileExt.ToLower())? true: throw new FileNotFoundException();
         }
 
         private bool checkExtension(string ext)
         {
-            return FileExt.ToLower() == ext? true: throw new FileNotFoundException();
+            return checkExtension(new List<string>() { ext });
         }
 
         public bool CheckDirectory()
@@ -98,16 +104,16 @@ namespace WeMicroIt.Utils.FileConverter.Models
 
         public bool CheckFile(bool create)
         {
-            if (string.IsNullOrEmpty(this.FileName) || string.IsNullOrEmpty(this.FileExt))
+            if (string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(FileExt))
             {
                 throw new ArgumentNullException();
             }
             CheckDirectory(create);
             if (create)
             {
-                File.Create(this.FullPath);
+                File.Create(FullPath);
             }
-            return File.Exists(this.FullPath)? true : throw new FileNotFoundException();
+            return File.Exists(FullPath)? true : throw new FileNotFoundException();
         }
 
         public List<string> GetFiles()
