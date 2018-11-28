@@ -24,8 +24,4 @@
   <ItemGroup>
     <ProjectReference Include="..\..\XMLConverter-Library\XMLConverter\XMLConverter.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Resource\" />
-  </ItemGroup>
 </Project>
