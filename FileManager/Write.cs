@@ -20,10 +20,6 @@ namespace WeMicroIt.Utils.FileConverter
             {
                 throw new DirectoryNotFoundException();
             }
-            if (!WriterInfo.CheckFile(true))
-            {
-                throw new FileNotFoundException();
-            }
             using (StreamWriter writer = new StreamWriter(WriterInfo.FullPath, append))
             {
                 switch (ioType)
