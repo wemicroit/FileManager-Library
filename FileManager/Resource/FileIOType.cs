@@ -10,6 +10,6 @@ namespace WeMicroIt.Utils.FileConverter.Resource
         Lines = 1,
         Line = 2,
         Data = 3,
-        Stream = 4
+        Stream = 4,
     }
 }

@@ -55,15 +55,15 @@ namespace WeMicroIt.Utils.FileConverter
             return true;
         }
 
-        public bool FilesSet(bool read, bool write, bool template)
+        public bool FilesSet(bool read, bool write, bool template, bool create)
         {
             if (read)
             {
-                ReaderInfo.CheckFile();
+                ReaderInfo.CheckDirectory(create);
             }
             if (write)
             {
-                WriterInfo.CheckDirectory();
+                WriterInfo.CheckDirectory(create);
             }
             if (template)
             {

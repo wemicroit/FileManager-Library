@@ -3,26 +3,56 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace WeMicroIt.Utils.FileConverter.Models
 {
     public class FileDetails
     {
         public string DirPath { get; set; }
+        public string SubDirPath { get; set; }
         public string FileName { get; set; } = "temp";
         public string FileExt { get; set; } = "xml";
-        private List<string> xmls = new List<string>() { "xml", "html" };
+        public string Section { get; set; }
+        public string SubSection { get; set; }
+        private static List<string> xmls { get; set; }
 
         public FileDetails()
         {
             DirPath = null;
             FileName = null;
             FileExt = null;
+
+            xmls = new List<string>() { "xml", "html" };
+        }
+
+        public string FullFileName
+        {
+            get
+            {
+                return string.Join(".", FileName, FileExt);
+            }
+        }
+
+        public string FullDirectory
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(SubDirPath))
+                {
+                    return Path.Combine(DirPath, SubDirPath);
+                }
+                return DirPath;
+            }
         }
 
         public string FullPath {
             get {
-                return Path.Combine(DirPath, string.Join(".", FileName, FileExt));
+                if (string.IsNullOrEmpty(DirPath))
+                {
+                    return FullFileName;
+                }
+                return Path.Combine(FullDirectory, FullFileName);
             }
             set {
                 if (string.IsNullOrEmpty(value))
@@ -30,6 +60,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
                     DirPath = null;
                     FileExt = null;
                     FileName = null;
+                    SubDirPath = null;
                     return;
                 }
                 int index = value.LastIndexOf('\\');
@@ -40,9 +71,18 @@ namespace WeMicroIt.Utils.FileConverter.Models
                     return;
                 }
                 DirPath = value.Substring(0, index);
-                FileName = value.Substring(index + 1, ext - index - 1);
+                FileName = value.Substring(index + 1, ext - index - 1); ;
                 FileExt = value.Substring(ext+ 1);
             }
+        }
+
+        public void BuildFileName(string name)
+        {
+            var temp = name.Split('.').ToList();
+            FileName = temp.LastOrDefault();
+            temp.RemoveAt(temp.Count - 1);
+            SubDirPath = Path.Combine(temp.ToArray());
+            CheckDirectory(true);
         }
 
         public bool IsCSV
@@ -92,9 +132,9 @@ namespace WeMicroIt.Utils.FileConverter.Models
             }
             if (create)
             {
-                Directory.CreateDirectory(this.DirPath);
+                Directory.CreateDirectory(FullDirectory);
             }
-            return Directory.Exists(DirPath) ? true: throw new DirectoryNotFoundException();
+            return Directory.Exists(FullDirectory) ? true: throw new DirectoryNotFoundException();
         }
 
         public bool CheckFile()
@@ -133,15 +173,15 @@ namespace WeMicroIt.Utils.FileConverter.Models
                 RecurseSubdirectories = true,
                 IgnoreInaccessible = true,
             };*/
-            return GetFiles(filter, null);
+            return GetFileNames(filter, SearchOption.AllDirectories);
         }
 
-        public List<string> GetFiles(string filter, string options)
+        public List<string> GetFilePaths(string filter, SearchOption options)
         {
             try
             {
                 CheckDirectory();
-                return Directory.GetFiles(this.DirPath, "").Select(x => x.Replace(this.DirPath, "")).ToList();
+                return Directory.GetFiles(FullDirectory, filter, SearchOption.AllDirectories).ToList();
             }
             catch (DirectoryNotFoundException)
             {
@@ -153,5 +193,16 @@ namespace WeMicroIt.Utils.FileConverter.Models
             }
         }
 
+        public List<string> GetFileNames(string filter, SearchOption options)
+        {
+            return GetFilePaths(filter, options).Select(x => x.Replace(FullDirectory, "")).ToList();
+        }
+
+
+        public bool RemoveFile()
+        {
+            File.Delete(FullPath);
+            return File.Exists(FullPath);
+        }
     }
 }
