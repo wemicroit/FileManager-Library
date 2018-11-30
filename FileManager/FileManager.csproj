@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
-    <AssemblyName>WeMicroIt.Utils.FileConverter</AssemblyName>
+    <AssemblyName>Utils.FileConverter</AssemblyName>
     <RootNamespace>WeMicroIt.Utils.FileConverter</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Version>0.5.0-Beta4</Version>
