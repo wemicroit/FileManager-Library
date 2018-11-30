@@ -118,13 +118,13 @@ namespace WeMicroIt.Utils.FileConverter
         {
             if (writerInfo.IsXML)
             {
-                var fullData = ReadXML<T>();
+                var fullData = ReadXML();
                 if (fullData == null)
                 {
                     //fullData = new List<T>();
                 }
                 //fullData.AddRange(data);
-                return WriteXML<T>(fullData);
+                return WriteXML(fullData);
             }
             throw new NotSupportedException();
         }

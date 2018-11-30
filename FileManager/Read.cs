@@ -89,11 +89,11 @@ namespace WeMicroIt.Utils.FileConverter
             throw new NotSupportedException();
         }
 
-        public T ReadXML<T>()
+        public XDocument ReadXML()
         {
             if (readerInfo.IsXML)
             {
-                return xMLConverter.DeSerializeObjects<T>(Reader);
+                return xMLConverter.DeSerializeDocument(Reader);
             }
             throw new NotSupportedException();
         }
