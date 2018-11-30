@@ -49,22 +49,19 @@ namespace WeMicroIt.Utils.FileConverter
 
         public string ReadFile()
         {
-            object data;
-            read(FileIOType.Block, out data);
+            read(FileIOType.Block, out object data);
             return (string)data;
         }
 
         public string ReadLine()
         {
-            object data;
-            read(FileIOType.Line, out data);
+            read(FileIOType.Line, out object data);
             return (string)data;
         }
 
         public List<string> ReadLines()
         {
-            object data;
-            read(FileIOType.Lines, out data);
+            read(FileIOType.Lines, out object data);
             return (List<string>)data;
         }
 
