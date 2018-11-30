@@ -13,7 +13,6 @@ namespace WeMicroIt.Utils.FileConverter
 {
     public partial class FileManager : IFileManager
     {
-        private static bool MultiAction { get; set; }
         private FileDetails readerInfo {get; set;}
         private FileDetails writerInfo { get; set; }
         private FileDetails transformerInfo { get; set; }

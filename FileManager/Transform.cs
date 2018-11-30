@@ -26,12 +26,6 @@ namespace WeMicroIt.Utils.FileConverter
             return true; ;
         }
 
-        public bool RestructureXML()
-        {
-            return true;
-        }
-
-
         public bool SplitAndTransformXML(string path, string name, string idPath)
         {
             string fileT = writerInfo.FileExt;
@@ -58,21 +52,22 @@ namespace WeMicroIt.Utils.FileConverter
             var ext = "md";
             foreach (var item in files)
             {
-                XDocument doc = XDocument.Load(ReaderInfo.FullPath);
-                WriterInfo.FullPath = ReaderInfo.FullPath;
-                WriterInfo.FileExt = "md";
-                WriteBlock(doc.Document.ToString());
-                if (removeOld)
-                {
-                    ReaderInfo.RemoveFile();
-                }
                 Reader = item;
+                ConvertXMLToRaw(ext, removeOld);
             }
             return true;
         }
 
-        public bool ConvertXMLToRaw()
+        public bool ConvertXMLToRaw(string ext, bool removeOld = false)
         {
+            XDocument doc = XDocument.Load(Reader);
+            Writer = Reader;
+            writerInfo.FileExt = ext;
+            WriteBlock(doc.Document.ToString());
+            if (removeOld)
+            {
+                readerInfo.RemoveFile();
+            }
             return true;
         }
     }
