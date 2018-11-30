@@ -16,7 +16,7 @@ namespace WeMicroIt.Utils.FileConverter
             {
                 throw new ArgumentNullException();
             }
-            if (!WriterInfo.CheckDirectory())
+            if (!writerInfo.CheckDirectory())
             {
                 throw new DirectoryNotFoundException();
             }
@@ -81,7 +81,7 @@ namespace WeMicroIt.Utils.FileConverter
 
         public bool WriteCSV<T>(List<T> data, bool Append)
         {
-            if (WriterInfo.IsCSV)
+            if (writerInfo.IsCSV)
             {
                 return WriteLines(null, Append);
                 //return WriteLines(CSVConverter.SerializeBlock<T>(data), Append);
@@ -92,7 +92,7 @@ namespace WeMicroIt.Utils.FileConverter
 
         public bool AppendJSON<T>(List<T> data)
         {
-            if (WriterInfo.IsJSON)
+            if (writerInfo.IsJSON)
             {
                 var fullData = ReadJSON<T>();
                 if (fullData == null)
@@ -107,16 +107,16 @@ namespace WeMicroIt.Utils.FileConverter
 
         public bool WriteJSON<T>(List<T> data)
         {
-            if (WriterInfo.IsJSON)
+            if (writerInfo.IsJSON)
             {
-                return write(JSONConverter.SerializeObjects(data), false, FileIOType.Block);
+                return write(jSONConverter.SerializeObjects(data), false, FileIOType.Block);
             }
             throw new NotSupportedException();
         }
 
         public bool AppendXML<T>(List<T> data)
         {
-            if (WriterInfo.IsXML)
+            if (writerInfo.IsXML)
             {
                 var fullData = ReadXML<T>();
                 if (fullData == null)
@@ -131,7 +131,7 @@ namespace WeMicroIt.Utils.FileConverter
 
         public bool WriteXML(XElement data)
         {
-            if (WriterInfo.IsXML)
+            if (writerInfo.IsXML)
             {
                 return write(data.ToString(),false, FileIOType.Block);
             }
@@ -140,9 +140,9 @@ namespace WeMicroIt.Utils.FileConverter
 
         public bool WriteXML<T>(T data)
         {
-            if (WriterInfo.IsXML)
+            if (writerInfo.IsXML)
             {
-                return write(XMLConverter.SerializeObjects(data),false, FileIOType.Block);
+                return write(xMLConverter.SerializeObjects(data),false, FileIOType.Block);
             }
             throw new NotSupportedException();
         }

@@ -14,28 +14,24 @@ namespace WeMicroIt.Utils.FileConverter
     public partial class FileManager : IFileManager
     {
         private static bool MultiAction { get; set; }
+        private FileDetails readerInfo {get; set;}
+        private FileDetails writerInfo { get; set; }
+        private FileDetails transformerInfo { get; set; }
+        private FileDetails templateInfo { get; set; }
 
-        public static FileDetails ReaderInfo {get; set;}
-        public static FileDetails WriterInfo { get; set; }
-        public static FileDetails TransformerInfo { get; set; }
-        public static FileDetails TemplateInfo { get; set; }
-
-        public static JSONConversion JSONConverter { get; set; }
-        public static XMLConversion XMLConverter { get; set; }
+        private JSONConversion jSONConverter { get; set; }
+        private XMLConversion xMLConverter { get; set; }
 
         public FileManager()
         {
             //CSVConverter = new CSVConverter.CSVConverter();
-            JSONConverter = new JSONConversion();
-            XMLConverter = new XMLConversion();
+            jSONConverter = new JSONConversion();
+            xMLConverter = new XMLConversion();
 
-            ReaderInfo = new FileDetails();
-            WriterInfo = new FileDetails();
-            TransformerInfo = new FileDetails();
-            TemplateInfo = new FileDetails();
-
-            ReaderInfo.FullPath = Directory.GetCurrentDirectory();
-            TransformerInfo.FullPath = Directory.GetCurrentDirectory();
+            readerInfo = new FileDetails();
+            writerInfo = new FileDetails();
+            transformerInfo = new FileDetails();
+            templateInfo = new FileDetails();
         }
 
         public bool setFiles(string read, string write, string template)

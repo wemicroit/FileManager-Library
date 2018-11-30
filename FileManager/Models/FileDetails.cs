@@ -55,12 +55,12 @@ namespace WeMicroIt.Utils.FileConverter.Models
                 return Path.Combine(FullDirectory, FullFileName);
             }
             set {
+                SubDirPath = null;
                 if (string.IsNullOrEmpty(value))
                 {
                     DirPath = null;
                     FileExt = null;
                     FileName = null;
-                    SubDirPath = null;
                     return;
                 }
                 int index = value.LastIndexOf('\\');

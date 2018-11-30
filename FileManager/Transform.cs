@@ -18,7 +18,6 @@ namespace WeMicroIt.Utils.FileConverter
 
         public bool SplitXML(string path)
         {
-            //WriterInfo.FileExt = "xml";
             foreach (var item in XMLConverter.PureSplits(path, ReaderInfo.FullPath))
             {
                 WriterInfo.FileName = DateTime.Now.Ticks.ToString();
@@ -35,28 +34,28 @@ namespace WeMicroIt.Utils.FileConverter
 
         public bool SplitAndTransformXML(string path, string name, string idPath)
         {
-            string fileT = WriterInfo.FileExt;
             foreach (var item in XMLConverter.GroupSplits(path, ReaderInfo.FullPath, name))
+            string fileT = writerInfo.FileExt;
             {
                 //Build the xml file to feed the splitting
-                WriterInfo.FileName = "temp";
-                WriterInfo.FileExt = "xml";
+                writerInfo.FileName = "temp";
+                writerInfo.FileExt = "xml";
                 WriteXML(item);
 
                 //now read the file to power transform
                 ReaderInfo.FullPath = WriterInfo.FullPath;
-                WriterInfo.BuildFileName(item.Element(XName.Get (idPath)).Value);
-                WriterInfo.FileExt = fileT;
+                writerInfo.BuildFileName(item.Element(XName.Get (idPath)).Value);
+                writerInfo.FileExt = fileT;
                 TransformXML();
-                ReaderInfo.RemoveFile();
+                readerInfo.RemoveFile();
             }
             return true;
         }
 
         public bool ConvertXMLFolderToRaw(bool removeOld = false)
         {
-            var files = ReaderInfo.GetFilePaths("*.xml", SearchOption.AllDirectories);
-            WriterInfo.SubDirPath = null;
+            var files = readerInfo.GetFilePaths("*.xml", SearchOption.AllDirectories);
+            var ext = "md";
             foreach (var item in files)
             {
                 ReaderInfo.FullPath = item;

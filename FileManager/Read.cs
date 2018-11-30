@@ -72,7 +72,7 @@ namespace WeMicroIt.Utils.FileConverter
 
         public List<T> ReadCSV<T>(bool headers)
         {
-            if (ReaderInfo.IsCSV)
+            if (readerInfo.IsCSV)
             {
                 throw new NotImplementedException();
             }
@@ -81,7 +81,7 @@ namespace WeMicroIt.Utils.FileConverter
 
         public List<T> ReadJSON<T>()
         {
-            if (ReaderInfo.IsJSON)
+            if (readerInfo.IsJSON)
             {
                 string data = ReadFile();
                 throw new NotImplementedException();
@@ -91,7 +91,7 @@ namespace WeMicroIt.Utils.FileConverter
 
         public T ReadXML<T>()
         {
-            if (ReaderInfo.IsXML)
+            if (readerInfo.IsXML)
             {
                 return XMLConverter.DeSerializeObjects<T>(ReaderInfo.FullPath);
             }
