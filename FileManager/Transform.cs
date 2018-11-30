@@ -16,11 +16,11 @@ namespace WeMicroIt.Utils.FileConverter
             return xMLConverter.Transforms(Reader, Templater, Writer);
         }
 
-        public bool SplitXML(string path)
+        public bool SplitXML(string path, string idPath)
         {
             foreach (var item in xMLConverter.PureSplits(path, Reader))
             {
-                WriterInfo.FileName = DateTime.Now.Ticks.ToString();
+                writerInfo.FileName = item.Element(XName.Get(idPath)).Value;
                 WriteXML(item);
             }
             return true; ;
