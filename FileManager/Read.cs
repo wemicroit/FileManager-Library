@@ -17,7 +17,7 @@ namespace WeMicroIt.Utils.FileConverter
         private bool read(FileIOType ioType, out object content)
         {
             content = null;
-            using (StreamReader reader = new StreamReader(ReaderInfo.FullPath))
+            using (StreamReader reader = new StreamReader(Reader))
             {
                 switch (ioType)
                 {
@@ -93,7 +93,7 @@ namespace WeMicroIt.Utils.FileConverter
         {
             if (readerInfo.IsXML)
             {
-                return XMLConverter.DeSerializeObjects<T>(ReaderInfo.FullPath);
+                return xMLConverter.DeSerializeObjects<T>(Reader);
             }
             throw new NotSupportedException();
         }

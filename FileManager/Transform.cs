@@ -13,12 +13,12 @@ namespace WeMicroIt.Utils.FileConverter
     {
         public bool TransformXML()
         {
-            return XMLConverter.Transforms(ReaderInfo.FullPath, TemplateInfo.FullPath, WriterInfo.FullPath);
+            return xMLConverter.Transforms(Reader, Templater, Writer);
         }
 
         public bool SplitXML(string path)
         {
-            foreach (var item in XMLConverter.PureSplits(path, ReaderInfo.FullPath))
+            foreach (var item in xMLConverter.PureSplits(path, Reader))
             {
                 WriterInfo.FileName = DateTime.Now.Ticks.ToString();
                 WriteXML(item);
@@ -34,8 +34,8 @@ namespace WeMicroIt.Utils.FileConverter
 
         public bool SplitAndTransformXML(string path, string name, string idPath)
         {
-            foreach (var item in XMLConverter.GroupSplits(path, ReaderInfo.FullPath, name))
             string fileT = writerInfo.FileExt;
+            foreach (var item in xMLConverter.GroupSplits(path, Reader, name))
             {
                 //Build the xml file to feed the splitting
                 writerInfo.FileName = "temp";
@@ -43,7 +43,7 @@ namespace WeMicroIt.Utils.FileConverter
                 WriteXML(item);
 
                 //now read the file to power transform
-                ReaderInfo.FullPath = WriterInfo.FullPath;
+                Reader = Writer;
                 writerInfo.BuildFileName(item.Element(XName.Get (idPath)).Value);
                 writerInfo.FileExt = fileT;
                 TransformXML();
@@ -58,7 +58,6 @@ namespace WeMicroIt.Utils.FileConverter
             var ext = "md";
             foreach (var item in files)
             {
-                ReaderInfo.FullPath = item;
                 XDocument doc = XDocument.Load(ReaderInfo.FullPath);
                 WriterInfo.FullPath = ReaderInfo.FullPath;
                 WriterInfo.FileExt = "md";
@@ -67,6 +66,7 @@ namespace WeMicroIt.Utils.FileConverter
                 {
                     ReaderInfo.RemoveFile();
                 }
+                Reader = item;
             }
             return true;
         }
