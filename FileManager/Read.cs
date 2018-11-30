@@ -8,7 +8,7 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using WeMicroIt.Utils.FileConverter.Interfaces;
-using WeMicroIt.Utils.FileConverter.Resource;
+using WeMicroIt.Utils.FileConverter.Resources.Enums;
 
 namespace WeMicroIt.Utils.FileConverter
 {

@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Xml.Linq;
 using WeMicroIt.Utils.FileConverter.Interfaces;
-using WeMicroIt.Utils.FileConverter.Resource;
+using WeMicroIt.Utils.FileConverter.Resources.Enums;
 
 namespace WeMicroIt.Utils.FileConverter
 {

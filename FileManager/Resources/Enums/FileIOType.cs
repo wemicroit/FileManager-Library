@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WeMicroIt.Utils.FileConverter.Resource
+namespace WeMicroIt.Utils.FileConverter.Resources.Enums
 {
     public enum FileIOType
     {
