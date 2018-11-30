@@ -33,38 +33,72 @@ namespace WeMicroIt.Utils.FileConverter
             templateInfo = new FileDetails();
         }
 
-        public bool setFiles(string read, string write, string template)
+        public string Reader
         {
-            if (!string.IsNullOrEmpty(read))
+            get
             {
-                ReaderInfo.FullPath = read;
+                return readerInfo.FullPath;
             }
-            if (!string.IsNullOrEmpty(write))
-            {
-                WriterInfo.FullPath = write;
+            set{
+                if (!string.IsNullOrEmpty(value))
+                {
+                    readerInfo.FullPath = value;
+                }
+                throw new ArgumentNullException();
             }
-            if (!string.IsNullOrEmpty(template))
-            {
-                TemplateInfo.FullPath = template;
-            }
-            return true;
         }
 
-        public bool FilesSet(bool read, bool write, bool template, bool create)
+        public string Writer
         {
-            if (read)
+            get
             {
-                ReaderInfo.CheckDirectory(create);
+                return writerInfo.FullPath;
             }
-            if (write)
+            set
             {
-                WriterInfo.CheckDirectory(create);
+                if (!string.IsNullOrEmpty(value))
+                {
+                    writerInfo.FullPath = value;
+                }
+                throw new ArgumentNullException();
             }
-            if (template)
+        }
+
+        public string Templater
+        {
+            get
             {
-                TemplateInfo.CheckFile();
+                return templateInfo.FullPath;
             }
-            return true;
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    templateInfo.FullPath = value;
+                }
+            }
+        }
+
+        public bool SetAllFiles(string read, string write, string template)
+        {
+            Reader = read;
+            Writer = write;
+            Templater = template;
+            return FilesExist;
+        }
+
+        public bool FilesExist
+        {
+            get
+            {
+                readerInfo.CheckDirectory(true);
+                writerInfo.CheckDirectory(true);
+                if (Templater != null)
+                {
+                    templateInfo.CheckFile();
+                }
+                return true;
+            }
         }
     }
 }
