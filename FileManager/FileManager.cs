@@ -11,6 +11,7 @@ using WeMicroIt.Utils.XMLConverter;
 
 namespace WeMicroIt.Utils.FileConverter
 {
+    /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/class/*'/> 
     public partial class FileManager : IFileManager
     {
         private FileDetails readerInfo {get; set;}
@@ -21,6 +22,7 @@ namespace WeMicroIt.Utils.FileConverter
         private JSONConversion jSONConverter { get; set; }
         private XMLConversion xMLConverter { get; set; }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/constructor[@name="Default"]/*'/> 
         public FileManager()
         {
             //CSVConverter = new CSVConverter.CSVConverter();
@@ -33,6 +35,7 @@ namespace WeMicroIt.Utils.FileConverter
             templateInfo = new FileDetails();
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/properties[@name="Reader"]/*'/> 
         public string Reader
         {
             get
@@ -48,6 +51,7 @@ namespace WeMicroIt.Utils.FileConverter
             }
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/properties[@name="Writer"]/*'/> 
         public string Writer
         {
             get
@@ -64,6 +68,7 @@ namespace WeMicroIt.Utils.FileConverter
             }
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/properties[@name="Templater"]/*'/> 
         public string Templater
         {
             get
@@ -79,6 +84,7 @@ namespace WeMicroIt.Utils.FileConverter
             }
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/properties[@name="FilesExist"]/*'/> 
         public bool FilesExist
         {
             get
@@ -93,6 +99,7 @@ namespace WeMicroIt.Utils.FileConverter
             }
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="SetAllFiles"]/*'/> 
         public bool SetAllFiles(string read, string write, string template)
         {
             Reader = read;

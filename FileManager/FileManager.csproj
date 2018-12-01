@@ -13,6 +13,7 @@
     <Description>A simple library which is designed to make working with files more efficent and reliable.</Description>
     <ApplicationIcon />
     <StartupObject />
+    <DocumentationFile>.\docs\Utils.FileConverter.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

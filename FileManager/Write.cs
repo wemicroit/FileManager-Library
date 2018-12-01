@@ -10,105 +10,125 @@ namespace WeMicroIt.Utils.FileConverter
 {
     public partial class FileManager : IFileManager
     {
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="All"]/*'/> 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="Block"]/*'/> 
         public bool WriteBlock(string contents)
         {
             return write(contents, false, FileIOType.Block);
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="All"]/*'/> 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="Line"]/*'/> 
         public bool WriteLine(string contents)
         {
             return WriteLine(contents, false);
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="All"]/*'/> 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Append"][@version="Line"]/*'/> 
         public bool WriteLine(string contents, bool append)
         {
             return write(string.Join(contents, "\r\n"), append, FileIOType.Line);
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="All"]/*'/> 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="Lines"]/*'/> 
         public bool WriteLines(List<string> contents)
         {
             return WriteLines(contents, false);
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="All"]/*'/> 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Append"][@version="Lines"]/*'/> 
         public bool WriteLines(List<string> contents, bool append)
         {
             return write(string.Join("\r\n", contents), append, FileIOType.Lines);
         }
 
-        public bool AppendCSV<T>(List<T> data)
-        {
-            return WriteCSV<T>(data, true);
-        }
-
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="All"]/*'/> 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="CSV"]/*'/> 
         public bool WriteCSV<T>(List<T> data)
         {
             return WriteCSV<T>(data, false);
         }
 
-        public bool WriteCSV<T>(List<T> data, bool Append)
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="All"]/*'/> 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Append"][@version="CSV"]/*'/> 
+        public bool WriteCSV<T>(List<T> data, bool append)
         {
             if (writerInfo.IsCSV)
             {
-                return WriteLines(null, Append);
+                return WriteLines(null, append);
                 //return WriteLines(CSVConverter.SerializeBlock<T>(data), Append);
                 throw new NotImplementedException();
             }
             throw new NotSupportedException();
         }
 
-        public bool AppendJSON<T>(List<T> data)
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="All"]/*'/> 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="JSON"]/*'/> 
+        public bool WriteJSON<T>(List<T> data)
+        {
+            return WriteJSON<T>(data, false);
+        }
+
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="All"]/*'/> 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Append"][@version="JSON"]/*'/> 
+        public bool WriteJSON<T>(List<T> data, bool append)
         {
             if (writerInfo.IsJSON)
             {
-                var fullData = ReadJSON<T>();
+                var fullData = append? ReadJSON<T>() : new List<T>();
                 if (fullData == null)
                 {
                     fullData = new List<T>();
                 }
                 fullData.AddRange(data);
-                return WriteJSON<T>(fullData);
+                return write(jSONConverter.SerializeObjects(fullData), false, FileIOType.Block);
             }
             throw new NotSupportedException();
         }
 
-        public bool WriteJSON<T>(List<T> data)
-        {
-            if (writerInfo.IsJSON)
-            {
-                return write(jSONConverter.SerializeObjects(data), false, FileIOType.Block);
-            }
-            throw new NotSupportedException();
-        }
-
-        public bool AppendXML<T>(List<T> data)
-        {
-            if (writerInfo.IsXML)
-            {
-                var fullData = ReadXML();
-                if (fullData == null)
-                {
-                    //fullData = new List<T>();
-                }
-                //fullData.AddRange(data);
-                return WriteXML(fullData);
-            }
-            throw new NotSupportedException();
-        }
-
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="All"]/*'/> 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="XMLDoc"]/*'/> 
         public bool WriteXML(XElement data)
         {
+            return WriteXML(data, false);
+        }
+
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="All"]/*'/> 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Append"][@version="XMLDoc"]/*'/> 
+        public bool WriteXML(XElement data, bool append)
+        {
             if (writerInfo.IsXML)
             {
-                return write(data.ToString(),false, FileIOType.Block);
+                XDocument fullData = append ? ReadXML() : new XDocument();
+                fullData.AddAfterSelf(data);
+                return write(fullData.ToString(), false, FileIOType.Block);
             }
             throw new NotSupportedException();
         }
 
-        public bool WriteXML<T>(T data)
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="All"]/*'/> 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="XMLObj"]/*'/> 
+        public bool WriteXML<T>(List<T> data)
+        {
+            return WriteXML<T>(data, false);
+        }
+
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Write"][@version="All"]/*'/> 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Append"][@version="XMLObj"]/*'/> 
+        public bool WriteXML<T>(List<T> data, bool append)
         {
             if (writerInfo.IsXML)
             {
-                return write(xMLConverter.SerializeObjects(data),false, FileIOType.Block);
+                var fullData = append? new List<T>() : new List<T>();
+                if (fullData == null)
+                {
+                    fullData = new List<T>();
+                }
+                fullData.AddRange(data);
+                return write(xMLConverter.SerializeObjects(fullData), false, FileIOType.Block);
             }
             throw new NotSupportedException();
         }

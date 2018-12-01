@@ -11,11 +11,13 @@ namespace WeMicroIt.Utils.FileConverter
 {
     public partial class FileManager : IFileManager
     {
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="TransformXML"]/*'/> 
         public bool TransformXML()
         {
             return xMLConverter.Transforms(Reader, Templater, Writer);
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="SplitXML"][@version="Base"]/*'/> 
         public bool SplitXML(string path, string idPath)
         {
             foreach (var item in xMLConverter.PureSplits(path, Reader))
@@ -26,6 +28,7 @@ namespace WeMicroIt.Utils.FileConverter
             return true; ;
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="SplitXML"][@version="Transform"]/*'/> 
         public bool SplitAndTransformXML(string path, string name, string idPath)
         {
             string fileT = writerInfo.FileExt;
@@ -46,6 +49,7 @@ namespace WeMicroIt.Utils.FileConverter
             return true;
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="ConvertXML"][@version="Folder"]/*'/> 
         public bool ConvertXMLFolderToRaw(bool removeOld = false)
         {
             var files = readerInfo.GetFilePaths("*.xml", SearchOption.AllDirectories);
@@ -58,6 +62,7 @@ namespace WeMicroIt.Utils.FileConverter
             return true;
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="ConvertXML"][@version="File"]/*'/> 
         public bool ConvertXMLToRaw(string ext, bool removeOld = false)
         {
             XDocument doc = XDocument.Load(Reader);

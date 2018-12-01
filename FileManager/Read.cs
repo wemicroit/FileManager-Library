@@ -14,29 +14,34 @@ namespace WeMicroIt.Utils.FileConverter
 {
     public partial class FileManager : IFileManager
     {
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Read"][@version="File"]/*'/> 
         public string ReadFile()
         {
             read(FileIOType.Block, out object data);
             return (string)data;
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Read"][@version="Line"]/*'/> 
         public string ReadLine()
         {
             read(FileIOType.Line, out object data);
             return (string)data;
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Read"][@version="Lines"]/*'/> 
         public List<string> ReadLines()
         {
             read(FileIOType.Lines, out object data);
             return (List<string>)data;
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Read"][@version="CSV"]/*'/> 
         public List<T> ReadCSV<T>()
         {
             return ReadCSV<T>(true);
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Read"][@version="CSVHeader"]/*'/> 
         public List<T> ReadCSV<T>(bool headers)
         {
             if (readerInfo.IsCSV)
@@ -46,6 +51,7 @@ namespace WeMicroIt.Utils.FileConverter
             throw new NotSupportedException();
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Read"][@version="JSON"]/*'/> 
         public List<T> ReadJSON<T>()
         {
             if (readerInfo.IsJSON)
@@ -56,6 +62,7 @@ namespace WeMicroIt.Utils.FileConverter
             throw new NotSupportedException();
         }
 
+        /// <include file='./docs/Classes.xml' path='doc/classes[@name="FileManager"]/methods[@name="Read"][@version="XML"]/*'/> 
         public XDocument ReadXML()
         {
             if (readerInfo.IsXML)

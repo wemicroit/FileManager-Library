@@ -7,8 +7,10 @@ using System.Xml.Linq;
 
 namespace WeMicroIt.Utils.FileConverter.Models
 {
+    /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/model/*'/> 
     public class FileDetails
     {
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/constructor[@name="Default"]/*'/> 
         public FileDetails()
         {
             DirPath = null;
@@ -18,14 +20,19 @@ namespace WeMicroIt.Utils.FileConverter.Models
             xmls = new List<string>() { "xml", "html" };
         }
 
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/properties[@name="DirPath"]/*'/> 
         public string DirPath { get; set; }
         
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/properties[@name="SubDirPath"]/*'/> 
         public string SubDirPath { get; set; }
         
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/properties[@name="FileName"]/*'/> 
         public string FileName { get; set; }
         
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/properties[@name="FileExt"]/*'/> 
         public string FileExt { get; set; }
 
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/properties[@name="FullFileName"]/*'/> 
         public string FullFileName
         {
             get
@@ -34,6 +41,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
             }
         }
 
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/properties[@name="FullDirectory"]/*'/> 
         public string FullDirectory
         {
             get
@@ -46,6 +54,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
             }
         }
 
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/properties[@name="FullPath"]/*'/> 
         public string FullPath {
             get {
                 if (string.IsNullOrEmpty(DirPath))
@@ -76,6 +85,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
             }
         }
 
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/properties[@name="IsCSV"]/*'/> 
         public bool IsCSV
         {
             get
@@ -84,6 +94,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
             }
         }
 
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/properties[@name="IsJSON"]/*'/> 
         public bool IsJSON
         {
             get
@@ -92,6 +103,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
             }
         }
 
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/properties[@name="IsXML"]/*'/> 
         public bool IsXML
         {
             get
@@ -100,6 +112,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
             }
         }
 
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/properties[@name="IsDirectory"]/*'/> 
         public bool IsDirectory
         {
             get
@@ -112,6 +125,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
             }
         }
 
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/properties[@name="IsFile"]/*'/> 
         public bool IsFile
         {
             get
@@ -128,6 +142,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
             }
         }
 
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/properties[@name="Files"]/*'/> 
         public List<string> Files
         {
             get
@@ -138,15 +153,17 @@ namespace WeMicroIt.Utils.FileConverter.Models
 
         private List<string> xmls { get; set; }
 
-        public void BuildFileName(string name)
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/method[@name="BuildFileName"]/*'/> 
+        public bool BuildFileName(string name)
         {
             var temp = name.Split('.').ToList();
             FileName = temp.LastOrDefault();
             temp.RemoveAt(temp.Count - 1);
             SubDirPath = Path.Combine(temp.ToArray());
-            DirectoryExists(true);
+            return DirectoryExists(true);
         }
 
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/method[@name="DirectoryExists"]/*'/> 
         public bool DirectoryExists(bool create)
         {
             if (create)
@@ -163,13 +180,14 @@ namespace WeMicroIt.Utils.FileConverter.Models
             return IsDirectory;
         }
 
-        public bool FileExists(bool created)
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/method[@name="FileExists"]/*'/> 
+        public bool FileExists(bool create)
         {
-            if (!created && !IsDirectory)
+            if (!create && !IsDirectory)
             {
                 return false;
             }
-            if (created)
+            if (create)
             {
                 try
                 {
@@ -197,6 +215,8 @@ namespace WeMicroIt.Utils.FileConverter.Models
             return IsFile;
         }
 
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/method[@name="GetFiles"][@version="All"]/*'/>
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/method[@name="GetFiles"][@version="Filtered"]/*'/> 
         public List<string> GetFiles(string filter)
         {
             if (true)
@@ -212,6 +232,8 @@ namespace WeMicroIt.Utils.FileConverter.Models
             return GetFileNames(filter, SearchOption.AllDirectories);
         }
 
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/method[@name="GetFiles"][@version="All"]/*'/>
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/method[@name="GetFiles"][@version="Options"]/*'/> 
         public List<string> GetFilePaths(string filter, SearchOption options)
         {
             try
@@ -232,16 +254,11 @@ namespace WeMicroIt.Utils.FileConverter.Models
             }
         }
 
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/method[@name="GetFiles"][@version="All"]/*'/>
+        /// <include file='./docs/Models.xml' path='doc/models[@name="FileDetails"]/method[@name="GetFiles"][@version="Names"]/*'/> 
         public List<string> GetFileNames(string filter, SearchOption options)
         {
             return GetFilePaths(filter, options).Select(x => x.Replace(FullDirectory, "")).ToList();
-        }
-
-
-        public bool RemoveFile()
-        {
-            File.Delete(FullPath);
-            return File.Exists(FullPath);
         }
 
         private bool checkExtension(List<string> supported)

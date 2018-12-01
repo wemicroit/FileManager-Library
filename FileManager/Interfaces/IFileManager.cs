@@ -4,7 +4,8 @@ using System.Text;
 
 namespace WeMicroIt.Utils.FileConverter.Interfaces
 {
-    interface IFileManager
+    /// <include file='./docs/Interfaces.xml' path='doc/interfaces[@name="IFileManager"]/interface/*'/> 
+    public interface IFileManager
     {
     }
 }
