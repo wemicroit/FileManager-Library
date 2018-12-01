@@ -16,7 +16,7 @@ namespace WeMicroIt.Utils.FileConverter
             {
                 throw new ArgumentNullException();
             }
-            if (!writerInfo.CheckDirectory)
+            if (!writerInfo.IsDirectory)
             {
                 throw new DirectoryNotFoundException();
             }

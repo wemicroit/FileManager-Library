@@ -95,7 +95,7 @@ namespace WeMicroIt.Utils.FileConverter
                 writerInfo.DirectoryExists(true);
                 if (Templater != null)
                 {
-                    return templateInfo.CheckFile;
+                    return templateInfo.IsFile;
                 }
                 return true;
             }

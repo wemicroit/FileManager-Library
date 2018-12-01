@@ -13,15 +13,13 @@ namespace WeMicroIt.Utils.FileConverter.Models
         public string SubDirPath { get; set; }
         public string FileName { get; set; } = "temp";
         public string FileExt { get; set; } = "xml";
-        public string Section { get; set; }
-        public string SubSection { get; set; }
         private static List<string> xmls { get; set; }
 
         public FileDetails()
         {
             DirPath = null;
-            FileName = null;
-            FileExt = null;
+            FileName = "temp";
+            FileExt = "xml";
 
             xmls = new List<string>() { "xml", "html" };
         }
@@ -164,7 +162,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
 
         public bool FileExists(bool created)
         {
-            if (!created && !CheckDirectory)
+            if (!created && !IsDirectory)
             {
                 return false;
             }
@@ -172,7 +170,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
             {
                 try
                 {
-                    return CheckFile;
+                    return IsFile;
                 }
                 catch (FileNotFoundException)
                 {
@@ -183,7 +181,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
             {
                 try
                 {
-                    if (CheckFile)
+                    if (IsFile)
                     {
                         File.Delete(FullPath);
                     }
@@ -223,7 +221,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
         {
             try
             {
-                if (!CheckDirectory)
+                if (!IsDirectory)
                 {
                     return null;
                 }
