@@ -41,7 +41,7 @@ namespace WeMicroIt.Utils.FileConverter
                 writerInfo.BuildFileName(item.Element(XName.Get (idPath)).Value);
                 writerInfo.FileExt = fileT;
                 TransformXML();
-                readerInfo.RemoveFile();
+                readerInfo.FileExists(false);
             }
             return true;
         }
@@ -66,7 +66,7 @@ namespace WeMicroIt.Utils.FileConverter
             WriteBlock(doc.Document.ToString());
             if (removeOld)
             {
-                readerInfo.RemoveFile();
+                readerInfo.FileExists(false);
             }
             return true;
         }

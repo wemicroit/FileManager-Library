@@ -72,7 +72,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
                 }
                 DirPath = value.Substring(0, index);
                 FileName = value.Substring(index + 1, ext - index - 1); ;
-                FileExt = value.Substring(ext+ 1);
+                FileExt = value.Substring(ext + 1);
             }
         }
 
@@ -82,7 +82,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
             FileName = temp.LastOrDefault();
             temp.RemoveAt(temp.Count - 1);
             SubDirPath = Path.Combine(temp.ToArray());
-            CheckDirectory(true);
+            DirectoryExists(true);
         }
 
         public bool IsCSV
@@ -111,7 +111,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
 
         private bool checkExtension(List<string> supported)
         {
-            return supported.Contains(FileExt.ToLower())? true: throw new FileNotFoundException();
+            return supported.Contains(FileExt.ToLower()) ? true : throw new FileNotFoundException();
         }
 
         private bool checkExtension(string ext)
@@ -119,46 +119,89 @@ namespace WeMicroIt.Utils.FileConverter.Models
             return checkExtension(new List<string>() { ext });
         }
 
-        public bool CheckDirectory()
+        public bool CheckDirectory
         {
-            return CheckDirectory(false);
+            get{
+                if (string.IsNullOrEmpty(DirPath))
+                {
+                    throw new ArgumentNullException();
+                }
+                return Directory.Exists(FullDirectory) ? true : throw new DirectoryNotFoundException();
+            }
         }
 
-        public bool CheckDirectory(bool create)
+        public bool DirectoryExists(bool create)
         {
-            if (string.IsNullOrEmpty(DirPath))
-            {
-                throw new ArgumentNullException();
-            }
             if (create)
             {
-                Directory.CreateDirectory(FullDirectory);
+                try
+                {
+                    return CheckDirectory;
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    Directory.CreateDirectory(FullDirectory);
+                }
             }
-            return Directory.Exists(FullDirectory) ? true: throw new DirectoryNotFoundException();
+            return CheckDirectory;
         }
 
-        public bool CheckFile()
+        public bool CheckFile
         {
-            return CheckFile(false);
-        }
-
-        public bool CheckFile(bool create)
-        {
-            if (string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(FileExt))
+            get
             {
-                throw new ArgumentNullException();
+                if (CheckDirectory)
+                {
+                    if (string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(FileExt))
+                    {
+                        throw new ArgumentNullException();
+                    }
+                    return File.Exists(FullPath) ? true : throw new FileNotFoundException();
+                }
+                throw new DirectoryNotFoundException();
             }
-            CheckDirectory(create);
-            if (create)
-            {
-                File.Create(FullPath);
-            }
-            return File.Exists(FullPath)? true : throw new FileNotFoundException();
         }
 
-        public List<string> GetFiles()
+        public bool FileExists(bool created)
         {
-            return GetFiles(null);
+            if (!created && !CheckDirectory)
+            {
+                return false;
+            }
+            if (created)
+            {
+                try
+                {
+                    return CheckFile;
+                }
+                catch (FileNotFoundException)
+                {
+                    File.Create(FullPath);
+                }
+            }
+            else
+            {
+                try
+                {
+                    if (CheckFile)
+                    {
+                        File.Delete(FullPath);
+                    }
+                }
+                catch (FileNotFoundException)
+                {
+                   
+                }
+            }
+            return CheckFile;
+        }
+
+        public List<string> Files
+        {
+            get
+            {
+                return GetFiles(null);
+            }
         }
 
         public List<string> GetFiles(string filter)
@@ -180,7 +223,10 @@ namespace WeMicroIt.Utils.FileConverter.Models
         {
             try
             {
-                CheckDirectory();
+                if (!CheckDirectory)
+                {
+                    return null;
+                }
                 return Directory.GetFiles(FullDirectory, filter, SearchOption.AllDirectories).ToList();
             }
             catch (DirectoryNotFoundException)

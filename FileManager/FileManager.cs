@@ -91,11 +91,11 @@ namespace WeMicroIt.Utils.FileConverter
         {
             get
             {
-                readerInfo.CheckDirectory(true);
-                writerInfo.CheckDirectory(true);
+                readerInfo.DirectoryExists(true);
+                writerInfo.DirectoryExists(true);
                 if (Templater != null)
                 {
-                    templateInfo.CheckFile();
+                    return templateInfo.CheckFile;
                 }
                 return true;
             }
