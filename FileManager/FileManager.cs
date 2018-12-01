@@ -79,14 +79,6 @@ namespace WeMicroIt.Utils.FileConverter
             }
         }
 
-        public bool SetAllFiles(string read, string write, string template)
-        {
-            Reader = read;
-            Writer = write;
-            Templater = template;
-            return FilesExist;
-        }
-
         public bool FilesExist
         {
             get
@@ -100,5 +92,14 @@ namespace WeMicroIt.Utils.FileConverter
                 return true;
             }
         }
+
+        public bool SetAllFiles(string read, string write, string template)
+        {
+            Reader = read;
+            Writer = write;
+            Templater = template;
+            return FilesExist;
+        }
+
     }
 }

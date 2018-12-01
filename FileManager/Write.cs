@@ -10,40 +10,6 @@ namespace WeMicroIt.Utils.FileConverter
 {
     public partial class FileManager : IFileManager
     {
-        private bool write(object content, bool append, FileIOType ioType)
-        {
-            if (content == null)
-            {
-                throw new ArgumentNullException();
-            }
-            if (!writerInfo.IsDirectory)
-            {
-                throw new DirectoryNotFoundException();
-            }
-            using (StreamWriter writer = new StreamWriter(Writer, append))
-            {
-                switch (ioType)
-                {
-                    case FileIOType.Block:
-                        writer.Write(content);
-                        break;
-                    case FileIOType.Lines:
-                        writer.Write(content);
-                        break;
-                    case FileIOType.Line:
-                        writer.WriteLine(content);
-                        break;
-                    case FileIOType.Data:
-                        writer.Write(content);
-                        break;
-                    default:
-                        break;
-                }
-                
-            }
-            return true; ;
-        }
-
         public bool WriteBlock(string contents)
         {
             return write(contents, false, FileIOType.Block);
@@ -145,6 +111,40 @@ namespace WeMicroIt.Utils.FileConverter
                 return write(xMLConverter.SerializeObjects(data),false, FileIOType.Block);
             }
             throw new NotSupportedException();
+        }
+
+        private bool write(object content, bool append, FileIOType ioType)
+        {
+            if (content == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (!writerInfo.IsDirectory)
+            {
+                throw new DirectoryNotFoundException();
+            }
+            using (StreamWriter writer = new StreamWriter(Writer, append))
+            {
+                switch (ioType)
+                {
+                    case FileIOType.Block:
+                        writer.Write(content);
+                        break;
+                    case FileIOType.Lines:
+                        writer.Write(content);
+                        break;
+                    case FileIOType.Line:
+                        writer.WriteLine(content);
+                        break;
+                    case FileIOType.Data:
+                        writer.Write(content);
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+            return true; ;
         }
     }
 }
