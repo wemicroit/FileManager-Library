@@ -9,12 +9,6 @@ namespace WeMicroIt.Utils.FileConverter.Models
 {
     public class FileDetails
     {
-        public string DirPath { get; set; }
-        public string SubDirPath { get; set; }
-        public string FileName { get; set; } = "temp";
-        public string FileExt { get; set; } = "xml";
-        private static List<string> xmls { get; set; }
-
         public FileDetails()
         {
             DirPath = null;
@@ -23,6 +17,14 @@ namespace WeMicroIt.Utils.FileConverter.Models
 
             xmls = new List<string>() { "xml", "html" };
         }
+
+        public string DirPath { get; set; }
+        
+        public string SubDirPath { get; set; }
+        
+        public string FileName { get; set; }
+        
+        public string FileExt { get; set; }
 
         public string FullFileName
         {
@@ -74,15 +76,6 @@ namespace WeMicroIt.Utils.FileConverter.Models
             }
         }
 
-        public void BuildFileName(string name)
-        {
-            var temp = name.Split('.').ToList();
-            FileName = temp.LastOrDefault();
-            temp.RemoveAt(temp.Count - 1);
-            SubDirPath = Path.Combine(temp.ToArray());
-            DirectoryExists(true);
-        }
-
         public bool IsCSV
         {
             get
@@ -107,19 +100,10 @@ namespace WeMicroIt.Utils.FileConverter.Models
             }
         }
 
-        private bool checkExtension(List<string> supported)
+        public bool IsDirectory
         {
-            return supported.Contains(FileExt.ToLower()) ? true : throw new FileNotFoundException();
-        }
-
-        private bool checkExtension(string ext)
-        {
-            return checkExtension(new List<string>() { ext });
-        }
-
-        public bool CheckDirectory
-        {
-            get{
+            get
+            {
                 if (string.IsNullOrEmpty(DirPath))
                 {
                     throw new ArgumentNullException();
@@ -128,27 +112,11 @@ namespace WeMicroIt.Utils.FileConverter.Models
             }
         }
 
-        public bool DirectoryExists(bool create)
-        {
-            if (create)
-            {
-                try
-                {
-                    return CheckDirectory;
-                }
-                catch (DirectoryNotFoundException)
-                {
-                    Directory.CreateDirectory(FullDirectory);
-                }
-            }
-            return CheckDirectory;
-        }
-
-        public bool CheckFile
+        public bool IsFile
         {
             get
             {
-                if (CheckDirectory)
+                if (IsDirectory)
                 {
                     if (string.IsNullOrEmpty(FileName) || string.IsNullOrEmpty(FileExt))
                     {
@@ -158,6 +126,41 @@ namespace WeMicroIt.Utils.FileConverter.Models
                 }
                 throw new DirectoryNotFoundException();
             }
+        }
+
+        public List<string> Files
+        {
+            get
+            {
+                return GetFiles(null);
+            }
+        }
+
+        private List<string> xmls { get; set; }
+
+        public void BuildFileName(string name)
+        {
+            var temp = name.Split('.').ToList();
+            FileName = temp.LastOrDefault();
+            temp.RemoveAt(temp.Count - 1);
+            SubDirPath = Path.Combine(temp.ToArray());
+            DirectoryExists(true);
+        }
+
+        public bool DirectoryExists(bool create)
+        {
+            if (create)
+            {
+                try
+                {
+                    return IsDirectory;
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    Directory.CreateDirectory(FullDirectory);
+                }
+            }
+            return IsDirectory;
         }
 
         public bool FileExists(bool created)
@@ -191,15 +194,7 @@ namespace WeMicroIt.Utils.FileConverter.Models
                    
                 }
             }
-            return CheckFile;
-        }
-
-        public List<string> Files
-        {
-            get
-            {
-                return GetFiles(null);
-            }
+            return IsFile;
         }
 
         public List<string> GetFiles(string filter)
@@ -247,6 +242,16 @@ namespace WeMicroIt.Utils.FileConverter.Models
         {
             File.Delete(FullPath);
             return File.Exists(FullPath);
+        }
+
+        private bool checkExtension(List<string> supported)
+        {
+            return supported.Contains(FileExt.ToLower()) ? true : throw new FileNotFoundException();
+        }
+
+        private bool checkExtension(string ext)
+        {
+            return checkExtension(new List<string>() { ext });
         }
     }
 }
