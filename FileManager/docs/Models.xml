@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<doc>
+  <models name="FileDetails">
+    <model>
+      <summary>
+        This Model contains all the different fields which make up a file address to allow for easier manipulation.
+      </summary>
+      <remark>
+        <para>
+          It is preferable to use the methods to configure the parameters as it will ensure that they are correctly set.
+        </para>
+      </remark>
+    </model>
+    <constructor name="Default">
+      <summary>
+        The default constructor used to build an instance of File Manager.
+      </summary>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+        </code>
+      </example>
+    </constructor>
+    <properties name="DirPath">
+      <value>
+        What is the base directory of where all the files are managed.
+      </value>
+    </properties>
+    <properties name="SubDirPath">
+      <value>
+        What is the sub directory which is to be used.
+      </value>
+    </properties>
+    <properties name="FileName">
+      <value>
+        What is the file name to be.
+      </value>
+    </properties>
+    <properties name="FileExt">
+      <value>
+        What is the extension of the file.
+      </value>
+    </properties>
+    <properties name="FullFileName">
+      <value>
+        Joins together the <seealso cref="FileName"/> with the <seealso cref="FileExt"/>."</value>
+    </properties>
+    <properties name="FullDirectory">
+      <value>
+        Combines the <seealso cref="DirPath" /> with the <seealso cref="SubDirPath"/>.
+      </value>
+    </properties>
+    <properties name="FullPath">
+      <value>
+        Comines the <seealso cref="FullDirectory"/> with the <seealso cref="FullFileName"/>. Alternatively it breaks a path down to its individual parts.
+      </value>
+    </properties>
+    <properties name="IsCSV">
+      <value>
+        Determines if the <seealso cref="FileExt"/> is a supported CSV file.
+      </value>
+    </properties>
+    <properties name="IsJSON">
+      <value>
+        Determines if the <seealso cref="FileExt"/> is a supported JSON file.
+      </value>
+    </properties>
+    <properties name="IsXML">
+      <value>
+        Determines if the <seealso cref="FileExt"/> is a supported XML file.
+      </value>
+    </properties>
+    <properties name="IsDirectory">
+      <value>
+        Does the <seealso cref="FullDirectory"/> exist.
+      </value>
+    </properties>
+    <properties name="IsFile">
+      <value>
+        Does the <seealso cref="FullFileName"/> exist.
+      </value>
+    </properties>
+    <properties name="Files">
+      <value>
+        What files are located in the <seealso cref="FullDirectory"/>.
+      </value>
+    </properties>
+    <method name="BuildFileName">
+      <summary>
+        Sets the path arguments based on <paramref name="name" />.
+      </summary>
+      <remark>
+        <para>
+          Note it doesn't use <seealso cref="DirPath" /> instead it uses <seealso cref="SubDirPath" />.
+        </para>
+      </remark>
+      <param name="name">What is the filename/path that needs to be manipulated.</param>
+      <returns>
+        If the Full Directory Path exists.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc= fileManager.BuildFileName(string);
+        </code>
+      </example>
+    </method>
+    <method name="DirectoryExists">
+      <summary>
+        Create the directory path if <paramref name="create"/> is true.
+      </summary>
+      <param name="create">Should the directory be made if the directory path does not exist.</param>
+      <returns>
+        If the directorry exists at the end of the methodd.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc= fileManager.DirectoryExists(bool);
+        </code>
+      </example>
+    </method>
+    <method name="FileExists">
+      <summary>
+        Create the file if <paramref name="create"/> is true otherwise deletes it.
+      </summary>
+      <param name="create">True indicates that it needs to exist whereas false will delete it if it exists.</param>
+      <returns>
+        If the file exists at the end of the methodd.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc= fileManager.FileExists(bool);
+        </code>
+      </example>
+    </method>
+    <method name="GetFiles" version="All">
+      <param name="filter">The search pattern which should restrict the files returned.</param>
+    </method>
+    <method name="GetFiles" version="Filtered">
+      <summary>
+        Make a list of all the files which matches the <paramref name="filter"/>.
+      </summary>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          List&lt;string&gt; files= fileManager.GetFiles(string);
+        </code>
+      </example>
+    </method>
+    <method name="GetFiles" version="Options">
+      <summary>
+        Make a list of all the files which matches the <paramref name="filter"/> and abays the <paramref name="options" />.
+      </summary>
+      <param name="options">The search options which should be applied</param>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          List&lt;string&gt; files= fileManager.GetFiles(string, System.IO.SearchOption);
+        </code>
+      </example>
+    </method>
+    <method name="GetFiles" version="Names">
+      <summary>
+        Make a list of all the files which matches the <paramref name="filter"/> and abays the <paramref name="options" />.
+      </summary>
+      <remark>
+        <para>Does not include directory path.</para>
+      </remark>
+      <param name="options">The search options which should be applied</param>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          List&lt;string&gt; files= fileManager.GetFileNames(string, System.IO.SearchOption);
+        </code>
+      </example>
+    </method>
+  </models>
+</doc>

@@ -1,0 +1,491 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<doc>
+  <classes name="FileManager">
+    <class>
+      <summary>
+        This Class contains all of the logic beyond the File Manager.
+      </summary>
+      <remark>
+        <para>Use IFileManage to dependency inject this service.</para>
+        <para>Common use cases are read, write &amp; transform.</para>
+      </remark>
+    </class>
+    <constructor name="Default">
+      <summary>
+        The default constructor used to build an instance of File Manager.
+      </summary>
+      <remark>
+        <para> This also initiatizes the child services such as CSV, JSON &amp; XML conversion.</para>
+      </remark>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+        </code>
+      </example>
+    </constructor>
+    <properties name="Reader">
+      <value>
+        Gets/Sets the readers full path.
+      </value>
+    </properties>
+    <properties name="Writer">
+      <value>
+        Gets/Sets the writers full path.
+      </value>
+    </properties>
+    <properties name="Templater">
+      <value>
+        Gets/Sets the templater full path.
+      </value>
+    </properties>
+    <properties name="FilesExist">
+      <value>
+        Gets a value which indicates if all of the set files exist.
+      </value>
+    </properties>
+    <methods name="SetAllFiles">
+      <summary>
+        Sets the path to the 2-3 files streams.
+      </summary>
+      <param name="read">Path to the read file.</param>
+      <param name="write">Path to the write file.</param>
+      <param name="template">Path to the template file.</param>
+      <returns>
+        If all the files/directories exist.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc= fileManager.SetAllFiles(string, string, string);
+        </code>
+      </example>
+    </methods>
+    <methods name="Read" version="File">
+      <summary>
+        Reads data from the specified file
+      </summary>
+      <returns>
+        The contents of the file as one big block
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          string data= fileManager.ReadFile();
+        </code>
+      </example>
+    </methods>
+    <methods name="Read" version="Line">
+      <summary>
+        Reads the next line from the specified file
+      </summary>
+      <returns>
+        The a single line of the file which is the stream is currently pointing to.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          string data= fileManager.ReadLine();
+        </code>
+      </example>
+    </methods>
+    <methods name="Read" version="Lines">
+      <summary>
+        Reads all the remaing lines of the specified file
+      </summary>
+      <returns>
+        Each individual line of the line of the file in a list;
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          List&lt;string&gt; data = fileManager.ReadLines();
+        </code>
+      </example>
+    </methods>
+    <methods name="Read" version="CSV">
+      <summary>
+        Read the following csv doc skipping the first line as it is a header.
+      </summary>
+      <seealso cref="ReadCSV&lt;T&gt;(bool)">To not skip the first row please use this.</seealso>
+      <returns>
+        A list of objects defined by T.
+      </returns>
+      <exception cref="System.NotSupportedException">Thrown when the file is not a csv file.</exception>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          List&lt;T&gt; data= fileManager.ReadCSV&lt;T&gt;();
+        </code>
+      </example>
+    </methods>
+    <methods name="Read" version="CSVHeader">
+      <summary>
+        Read the following csv doc and only skip the first line if <paramref cref="headers"/> is true.
+      </summary>
+      <param name="headers">Indicates if the first line is to be skipped.</param>
+      <returns>
+        A list of objects defined by T.
+      </returns>
+      <exception cref="System.NotSupportedException">Thrown when the file is not a csv file.</exception>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          List&lt;T&gt; data= fileManager.ReadCSV&lt;T&gt;();
+        </code>
+      </example>
+    </methods>
+    <methods name="Read" version="JSON">
+      <summary>
+        Read the following json doc.
+      </summary>
+      <returns>
+        A list of objects defined by T.
+      </returns>
+      <exception cref="System.NotSupportedException">Thrown when the file is not a csv file.</exception>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          List&lt;T&gt; data= fileManager.ReadJSON&lt;T&gt;();
+        </code>
+      </example>
+    </methods>
+    <methods name="Read" version="XML">
+      <summary>
+        Read the sprecied xml doc.
+      </summary>
+      <returns>
+        An XDocument which contains all the nodes
+      </returns>
+      <exception cref="System.NotSupportedException">Thrown when the file is not a csv file.</exception>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          XDocument data= fileManager.ReadXML();
+        </code>
+      </example>
+    </methods>
+    <methods name="TransformXML">
+      <summary>
+        Transform the specified XML using the filetemplate and save it to the destination.
+      </summary>
+      <returns>
+        If the transformation was successful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.TransformXML();
+        </code>
+      </example>
+    </methods>
+    <methods name="SplitXML" version="Base">
+      <summary>
+        Split the specified XML file at the node specified by <paramref name="path"/>.
+      </summary>
+      <remarks>
+        <para>
+          Use <paramref name="idPath"/> as the new file name
+        </para>
+      </remarks>
+      <param name="path">What node should be used for splitting.</param>
+      <param name="idPath">What should the new files name be based upon.</param>
+      <returns>
+        If the split was successful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.SplitXML(string, string);
+        </code>
+      </example>
+    </methods>
+    <methods name="SplitXML" version="Transform">
+      <summary>
+        Split the specified XML file at the node specified by <paramref name="path"/> and put it in groups based upon <paramref name="name"/>.
+      </summary>
+      <remarks>
+        <para>
+          Use <paramref name="idPath"/> as the new file name
+        </para>
+      </remarks>
+      <param name="path">What node should be used for splitting.</param>
+      <param name="idPath">What should the new files name be based upon.</param>
+      <param name="name">What should be used for the grouping.</param>
+      <returns>
+        If the split/Transform was successful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.SplitAndTransformXML(string, string, string);
+        </code>
+      </example>
+    </methods>
+    <methods name="ConvertXML" version="Folder">
+      <summary>
+        Convert all the xml files in the directory to a new format.
+      </summary>
+      <remarks>
+        <para>
+          Use <paramref name="removeOld"/> to indicate what should happen to the old file.
+        </para>
+      </remarks>
+      <param name="removeOld">if true the file which has been converted will be deleted.</param>
+      <returns>
+        If the conversion was successful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.ConvertXMLFolderToRaw(bool);
+        </code>
+      </example>
+    </methods>
+    <methods name="ConvertXML" version="File">
+      <summary>
+        Convert the specified xml file to the format specified by <paramref name="ext"/>.
+      </summary>
+      <remarks>
+        <para>
+          Use <paramref name="removeOld"/> to indicate what should happen to the old file.
+        </para>
+      </remarks>
+      <param name="removeOld">if true the file which has been converted will be deleted.</param>
+      <param name="ext">The extension for the new file.</param>
+      <returns>
+        If the conversion was successful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.ConvertXMLFolderToRaw(bool);
+        </code>
+      </example>
+    </methods>
+    <methods name="Write" version="All">
+      <exception cref="System.ArgumentNullException">Thrown when the data to be written is null.</exception>
+      <exception cref="System.IO.DirectoryNotFoundException">Thrown when the writer directory is not valid.</exception>
+    </methods>
+    <methods name="Write" version="Block">
+      <summary>
+        Writes the data as the contents <paramrefof name="contents"/> as the specified file.
+      </summary>
+      <param name="contents">The data which is to be written as a file.</param>
+      <returns>
+        If the write was successulful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.WriteBlock(string);
+        </code>
+      </example>
+    </methods>
+    <methods name="Write" version="Line">
+      <summary>
+        Writes a new line specified by <paramrefof name="contents"/> as the specified file.
+      </summary>
+      <param name="contents">The data which is to be written as a file.</param>
+      <returns>
+        If the write was successulful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          string data= fileManager.WriteLine(string);
+        </code>
+      </example>
+    </methods>
+    <methods name="Write" version="Lines">
+      <summary>
+        Writes a series of lines specified by <paramrefof name="contents"/> as the specified file.
+      </summary>
+      <param name="contents">The data which is to be written as a file.</param>
+      <returns>
+        If the write was successulful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.WriteLines(List&lt;string&gt;);
+        </code>
+      </example>
+    </methods>
+    <methods name="Write" version="CSV">
+      <summary>
+        Writes the list of objects specified by <paramrefof name="contents"/> as the specified file encoded using CSV.
+      </summary>
+      <param name="data">The data which is to be written as a file.</param>
+      <returns>
+        If the write was successulful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.WriteCSV&lt;T&gt;(List&lt;T&gt;);
+        </code>
+      </example>
+    </methods>
+    <methods name="Write" version="JSON">
+      <summary>
+        Writes the list of objects specified by <paramrefof name="contents"/> as the specified file encoded using JSON.
+      </summary>
+      <param name="data">The data which is to be written as a file.</param>
+      <returns>
+        If the write was successulful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.WriteJson&lt;T&gt;(List&lt;T&gt;);
+        </code>
+      </example>
+    </methods>
+    <methods name="Write" version="XMLDoc">
+      <summary>
+        Writes the xml document in <paramrefof name="contents"/> as the specified file encoded using XML.
+      </summary>
+      <param name="data">The document which is to be written as a file.</param>
+      <returns>
+        If the write was successulful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.WriteXML(XElement);
+        </code>
+      </example>
+    </methods>
+    <methods name="Write" version="XMLObj">
+      <summary>
+        Writes the list of objects specified by <paramrefof name="contents"/> as the specified file encoded using XML.
+      </summary>
+      <param name="data">The data which is to be written as a file.</param>
+      <returns>
+        If the write was successulful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.WriteXML&lt;T&gt;(T);
+        </code>
+      </example>
+    </methods>
+    <methods name="Append" version="Line">
+      <summary>
+        Writes a new line specified by <paramrefof name="contents"/> as the specified file.
+      </summary>
+      <param name="contents">The data which is to be written as a file.</param>
+      <param name="append">If the data should be append or overwritten.</param>
+      <returns>
+        If the write was successulful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          string data= fileManager.WriteLine(string, bool);
+        </code>
+      </example>
+    </methods>
+    <methods name="Append" version="Lines">
+      <summary>
+        Writes a series of lines specified by <paramrefof name="contents"/> as the specified file.
+      </summary>
+      <param name="contents">The data which is to be written as a file.</param>
+      <param name="append">If the data should be append or overwritten.</param>
+      <returns>
+        If the write was successulful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.WriteLines(List&lt;string&gt;, bool);
+        </code>
+      </example>
+    </methods>
+    <methods name="Append" version="CSV">
+      <summary>
+        Append the list of objects specified by <paramrefof name="contents"/> as the specified file encoded using CSV.
+      </summary>
+      <remark>
+        <para>
+          The <paramref name="append"/> indicates if the existing should be kept.
+        </para>
+      </remark>
+      <param name="append">A flag indicating if old content is to be kept.</param>
+      <param name="data">The data which is to be written as a file.</param>
+      <returns>
+        If the write was successulful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.WriteCSV&lt;T&gt;(List&lt;T&gt;, bool);
+        </code>
+      </example>
+    </methods>
+    <methods name="Append" version="JSON">
+      <summary>
+        Append the list of objects specified by <paramrefof name="contents"/> as the specified file encoded using JSON.
+      </summary>
+      <remark>
+        <para>
+          The <paramref name="append"/> indicates if the existing should be kept.
+        </para>
+      </remark>
+      <param name="append">A flag indicating if old content is to be kept.</param>
+      <param name="data">The data which is to be written as a file.</param>
+      <returns>
+        If the write was successulful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.WriteJson&lt;T&gt;(List&lt;T&gt;, bool);
+        </code>
+      </example>
+    </methods>
+    <methods name="Append" version="XMLDoc">
+      <summary>
+        Append the list of objects specified by <paramrefof name="contents"/> as the specified file encoded using JSON.
+      </summary>
+      <remark>
+        <para>
+          The <paramref name="append"/> indicates if the existing should be kept.
+        </para>
+      </remark>
+      <param name="append">A flag indicating if old content is to be kept.</param>
+      <param name="data">The data which is to be written as a file.</param>
+      <returns>
+        If the write was successulful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.WriteJson&lt;T&gt;(List&lt;T&gt;, bool);
+        </code>
+      </example>
+    </methods>
+    <methods name="Append" version="XMLObj">
+      <summary>
+        Append the list of objects specified by <paramrefof name="contents"/> as the specified file encoded using JSON.
+      </summary>
+      <remark>
+        <para>
+          The <paramref name="append"/> indicates if the existing should be kept.
+        </para>
+      </remark>
+      <param name="append">A flag indicating if old content is to be kept.</param>
+      <param name="data">The data which is to be written as a file.</param>
+      <returns>
+        If the write was successulful.
+      </returns>
+      <example>
+        <code>
+          FileManager fileManager = new FileManager();
+          bool rc = fileManager.WriteJson&lt;T&gt;(List&lt;T&gt;, bool);
+        </code>
+      </example>
+    </methods>
+  </classes>
+</doc>

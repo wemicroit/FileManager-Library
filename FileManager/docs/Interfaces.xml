@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<doc>
+  <interfaces name="IFileManager">
+    <interface>
+      <summary>
+        This interface allow's for Depenency Injection of the File Manager service into all the classes.
+      </summary>
+      <remark>
+        <para>This provide a unifed way to interact with the file system as well as undertaking all of the necessary conversion.</para>
+      </remark>
+      <seealso cref="FileManager()"></seealso>
+    </interface>
+  </interfaces>
+</doc>

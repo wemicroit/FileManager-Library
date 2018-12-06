@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<doc>
+  <enums name="FileIOType">
+    <enum>
+      <summary>
+        Defines all the different types of file io which can occur.
+      </summary>
+    </enum>
+    <field name="Block">
+      <value>
+        This indicates that the data is to be read/written as is from/to the file.
+      </value>
+    </field>
+    <field name="Lines">
+      <value>
+        This indicates that the data is to be read/written as individual lines from/to the file.
+      </value>
+    </field>
+    <field name="Line">
+      <value>
+        This indicates that the data is to be read/written as a single line from/to the file.
+      </value>
+    </field>
+    <field name="Data">
+      <value>
+        This indicates that the data is to be read/written as is from/to the file.
+      </value>
+    </field>
+    <field name="Stream">
+      <value>
+        This indicates that the data is to be read/written from/to the stream.
+      </value>
+    </field>
+  </enums>
+</doc>
