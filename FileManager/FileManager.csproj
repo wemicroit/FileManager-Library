@@ -6,7 +6,7 @@
     <AssemblyName>Utils.FileConverter</AssemblyName>
     <RootNamespace>WeMicroIt.Utils.FileConverter</RootNamespace>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.5.0-Beta4</Version>
+    <Version>0.7.0</Version>
     <Authors>James Thompson</Authors>
     <Company>WeMicroIt</Company>
     <Product>FileConverter</Product>
@@ -14,15 +14,20 @@
     <ApplicationIcon />
     <StartupObject />
     <DocumentationFile>.\docs\Utils.FileConverter.xml</DocumentationFile>
+    <Copyright>2018</Copyright>
+    <RepositoryType>GIT</RepositoryType>
+    <PackageLicenseUrl>https://github.com/wemicroit/FileManager-Library/blob/rc/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/wemicroit/FileManager-Library</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/wemicroit/FileManager-Library</RepositoryUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/wemicroit/FileManager-Library/rc/FileManager/Resources/Logo.png</PackageIconUrl>
+    <PackageTags>JSON XML Read Write Transform</PackageTags>
+    <PackageId>WeMicroIt.Utils.FileConverter</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="WeMicroIt.Utils.JSONConverter" Version="0.5.0-Beta4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\XMLConverter-Library\XMLConverter\XMLConverter.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="WeMicroIt.Utils.JSONConverter" Version="0.7.1" />
+    <PackageReference Include="WeMicroIt.Utils.XMLConverter" Version="0.7.0" />
   </ItemGroup>
 </Project>
